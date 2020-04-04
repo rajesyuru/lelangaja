@@ -86,3 +86,7 @@ exports.updateUser = (id, {name, email, password}) => {
         return false;
     }
 };
+
+exports.getAllUsers = () => {
+    return getUsers();
+};

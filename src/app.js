@@ -70,8 +70,19 @@ app.post('/login', (req, res) => {
             message: 'Password mesti diisi'
         });
     } else {
-        const user = dbUser.login(email, password);
+        let user = null;
 
+        if ( email === 'admin@admin.com' && password === 'jakarta123' ) {
+            user = {
+                id: 'admin1234567890',
+                email: 'admin@admin.com',
+                name: 'Administrator',
+                role: 'admin',
+            };
+        } else {
+            user = dbUser.login(email, password);
+        }
+        
         if (!user) {
             res.send({
                 status: 'error',
@@ -90,7 +101,18 @@ app.get('/check-login', (req, res) => {
     if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
         const id = req.headers.cookie.split('=')[1];
 
-        let user = dbUser.getUser(id);
+        let user = null;
+
+        if ( id === 'admin1234567890' ) {
+            user = {
+                id: 'admin1234567890',
+                email: 'admin@admin.com',
+                name: 'Administrator',
+                role: 'admin',
+            };
+        } else {
+            user = dbUser.getUser(id);
+        }
 
         if (user) {
             // jangan mengikutsertakan password
@@ -143,6 +165,30 @@ app.post('/edit-profile', (req, res) => {
             res.send({
                 status: 'error',
                 message: 'Gagal update user',
+            });
+        }
+    } else {
+        res.send({
+            status: 'error',
+            message: 'Anda harus login terlebih dahulu',
+        });
+    }
+});
+
+
+app.get('/users', (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        if (id === 'admin1234567890') {
+            res.send({
+                status: 'success',
+                data: dbUser.getAllUsers(),
+            });
+        } else {
+            res.send({
+                status: 'error',
+                message: 'Anda bukan admin',
             });
         }
     } else {

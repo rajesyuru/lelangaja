@@ -6,6 +6,15 @@ fetch('/check-login')
         } else {
             document.getElementById('userName').innerText = `Halo ${data.user.name}`;
 
+            if (data.user.role === 'admin') {
+                document.getElementById('navEditProfile').classList.add('d-none');
+                document.getElementById('navListUsers').classList.remove('d-none');
+            } else {
+                document.getElementById('navEditProfile').classList.remove('d-none');
+                document.getElementById('navListUsers').classList.add('d-none');
+            }
+
+
             const event = new CustomEvent('user-ready', {
                 bubbles: true,
                 detail: {
