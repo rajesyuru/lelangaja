@@ -52,3 +52,37 @@ exports.getUser = (id) => {
 
     return users.find(user => user.id === id);
 };
+
+exports.updateUser = (id, {name, email, password}) => {
+    let users = getUsers();
+
+    let user = users.find(user => user.id === id);
+
+    if (user) {
+        if (name) {
+            user.name = name;
+        }
+
+        if (email) {
+            user.email = email;
+        }
+
+        if (password) {
+            user.password = password;
+        }
+
+        users = users.map(_user => {
+            if (_user.id === id) {
+                _user = user;
+            }
+
+            return _user;
+        });
+
+        saveUsers(users);
+
+        return true;
+    } else {
+        return false;
+    }
+};

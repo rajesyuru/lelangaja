@@ -110,6 +110,49 @@ app.get('/check-login', (req, res) => {
     });
 });
 
+
+
+app.get('/logout', (req, res) => {
+    // 1) hapus cookies
+    res.clearCookie('id');
+
+    // 2) redirect ke halaman login
+    res.redirect('/index.html');
+});
+
+app.post('/edit-profile', (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        if (req.body.name.trim().length === 0) {
+            res.send({
+                status: 'error',
+                message: 'Nama mesti diisi'
+            });
+        }
+
+        const name = req.body.name;
+
+        let result = dbUser.updateUser(id, {name: name});
+
+        if (result) {
+            res.send({
+                status: 'success',
+            });
+        } else {
+            res.send({
+                status: 'error',
+                message: 'Gagal update user',
+            });
+        }
+    } else {
+        res.send({
+            status: 'error',
+            message: 'Anda harus login terlebih dahulu',
+        });
+    }
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

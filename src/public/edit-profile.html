@@ -24,7 +24,7 @@
                                 <span id="userName">User</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-md-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="edit-profile.html">Edit Profile</a>
+                                <a class="dropdown-item disabled" href="#">Edit Profile</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/logout">Logout</a>
                             </div>
@@ -33,9 +33,16 @@
                 </nav>
             </div>
         </div>
-        <div class="row" id="dashboard">
+        <div class="row">
             <div class="col-12">
-                <h2>Dashboard</h2>
+                <h2>Edit profile</h2>
+                <form action="" class="form" id="edit-form">
+                    <div class="form-group">
+                        <label for="name">Nama</label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                    <button class="submit btn btn-primary">Simpan</button>
+                </form>
             </div>
         </div>
     </div>
@@ -51,7 +58,7 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script src="js/checklogin.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/edit-profile.js"></script>
 </body>
 
 </html>
