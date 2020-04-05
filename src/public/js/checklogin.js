@@ -9,9 +9,11 @@ fetch('/check-login')
             if (data.user.role === 'admin') {
                 document.getElementById('navEditProfile').classList.add('d-none');
                 document.getElementById('navListUsers').classList.remove('d-none');
+                document.getElementById('navAddProduct').classList.add('d-none');
             } else {
                 document.getElementById('navEditProfile').classList.remove('d-none');
                 document.getElementById('navListUsers').classList.add('d-none');
+                document.getElementById('navAddProduct').classList.remove('d-none');
             }
 
 

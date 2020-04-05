@@ -17,7 +17,7 @@ document.getElementById('form-login').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(json => {
         if (json.status === 'success') {
-            location.href = 'dashboard.html';
+            location.href = 'dashboard';
         } else {
             document.getElementById('message-success').classList.add('d-none');
             document.getElementById('message-error').classList.remove('d-none');

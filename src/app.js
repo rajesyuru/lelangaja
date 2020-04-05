@@ -1,13 +1,70 @@
 const express = require('express');
 const path = require('path');
 const dbUser = require('./db/user');
+const dbProduct = require('./db/products');
 const bodyParser = require('body-parser');
+const {Buffer} = require('buffer');
+
+
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(bodyParser.json());
+
+app.set('view engine', 'ejs');
+
+app.set('views', path.join(__dirname, 'views'));
+
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+app.get('/dashboard', (req, res) => {
+    res.render('dashboard');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+
+app.get('/edit-profile', (req, res) => {
+    res.render('edit-profile');
+});
+
+app.get('/users', (req, res) => {
+    res.render('users');
+});
+
+app.get('/add-product', (req, res) => {
+    res.render('add-product');
+});
+
+app.post('/api/add-product', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        await dbProduct.addProduct({
+            id: id,
+        }, {
+            name: req.body.name,
+            image: req.body.image,
+            description: req.body.description,
+            multiplier: req.body.multiplier,
+            end_date: req.body.end_date,
+        });
+
+        res.send({
+            status: 'success',
+        });
+    } else {
+        res.send({
+            status: 'error',
+        });
+    }
+});
+
 
 app.post('/register', async (req, res) => {
     if (req.body.name.trim().length === 0) {
@@ -139,7 +196,7 @@ app.get('/logout', (req, res) => {
     res.clearCookie('id');
 
     // 2) redirect ke halaman login
-    res.redirect('/index.html');
+    res.redirect('/');
 });
 
 app.post('/edit-profile', async (req, res) => {
@@ -176,7 +233,7 @@ app.post('/edit-profile', async (req, res) => {
 });
 
 
-app.get('/users', async (req, res) => {
+app.get('/api/users', async (req, res) => {
     if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
         const id = req.headers.cookie.split('=')[1];
 

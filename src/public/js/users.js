@@ -1,4 +1,4 @@
-fetch('/users')
+fetch('/api/users')
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
@@ -9,7 +9,7 @@ fetch('/users')
                     <tr>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
-                        <td>${user.id}</td>
+                        <td>${btoa(user.password)}</td>
                     </tr>
                 `;
             });
