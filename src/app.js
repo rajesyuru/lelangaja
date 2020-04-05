@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(bodyParser.json());
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
     if (req.body.name.trim().length === 0) {
         res.send({
             status: 'error',
@@ -35,7 +35,7 @@ app.post('/register', (req, res) => {
             status: 'error',
             message: 'Password yang anda masukkan tidak sama'
         });
-    } else if (dbUser.doesEmailExists(req.body.email)) {
+    } else if (await dbUser.doesEmailExists(req.body.email)) {
         res.send({
             status: 'error',
             message: 'Email sudah pernah digunakan'
@@ -43,7 +43,7 @@ app.post('/register', (req, res) => {
     } else {
         const {name, email, password} = req.body;
 
-        dbUser.addUser({
+        await dbUser.addUser({
             name: name,
             email: email,
             password: password
@@ -55,7 +55,7 @@ app.post('/register', (req, res) => {
     }
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
@@ -80,7 +80,7 @@ app.post('/login', (req, res) => {
                 role: 'admin',
             };
         } else {
-            user = dbUser.login(email, password);
+            user = await dbUser.login(email, password);
         }
         
         if (!user) {
@@ -97,7 +97,7 @@ app.post('/login', (req, res) => {
     }
 });
 
-app.get('/check-login', (req, res) => {
+app.get('/check-login', async (req, res) => {
     if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
         const id = req.headers.cookie.split('=')[1];
 
@@ -111,7 +111,7 @@ app.get('/check-login', (req, res) => {
                 role: 'admin',
             };
         } else {
-            user = dbUser.getUser(id);
+            user = await dbUser.getUser(id);
         }
 
         if (user) {
@@ -142,7 +142,7 @@ app.get('/logout', (req, res) => {
     res.redirect('/index.html');
 });
 
-app.post('/edit-profile', (req, res) => {
+app.post('/edit-profile', async (req, res) => {
     if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
         const id = req.headers.cookie.split('=')[1];
 
@@ -155,7 +155,7 @@ app.post('/edit-profile', (req, res) => {
 
         const name = req.body.name;
 
-        let result = dbUser.updateUser(id, {name: name});
+        let result = await dbUser.updateUser(id, {name: name});
 
         if (result) {
             res.send({
@@ -176,14 +176,14 @@ app.post('/edit-profile', (req, res) => {
 });
 
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
     if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
         const id = req.headers.cookie.split('=')[1];
 
         if (id === 'admin1234567890') {
             res.send({
                 status: 'success',
-                data: dbUser.getAllUsers(),
+                data: await dbUser.getAllUsers(),
             });
         } else {
             res.send({
