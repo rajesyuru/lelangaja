@@ -3,7 +3,6 @@ const path = require('path');
 const dbUser = require('./db/user');
 const dbProduct = require('./db/products');
 const bodyParser = require('body-parser');
-const {Buffer} = require('buffer');
 
 
 

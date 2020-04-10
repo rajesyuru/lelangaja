@@ -1,11 +1,22 @@
+$('[name="end_date"]').datetimepicker({
+    format: 'Y-m-d H:i:00'
+});
+
+$('[name="multiplier"]').maskMoney({
+    thousands: '.',
+    precision: 0,
+    bringCaretAtEndOnFocus: false,
+});
+
 document.getElementById('add-product-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const name = document.getElementById('name').value;
     const image = document.getElementById('image').value;
     const description = document.getElementById('description').value;
-    const multiplier = document.getElementById('multiplier').value;
+    const multiplier = document.getElementById('multiplier').value.split('.').join('');
     const end_date = document.getElementById('end_date').value;
+
 
     fetch('/api/add-product', {
             method: 'POST',

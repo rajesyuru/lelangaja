@@ -2,7 +2,7 @@ fetch('/check-login')
     .then(response => response.json())
     .then(data => {
         if (data.status === 'error') {
-            location.href = 'index.html';
+            location.href = '/';
         } else {
             document.getElementById('userName').innerText = `Halo ${data.user.name}`;
 
