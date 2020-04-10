@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('partials/head') %>
 </head>
@@ -10,6 +11,38 @@
         <div class="row">
             <div class="col-12">
                 <h1>Dashboard</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+                    <% for (let i = 0; i < products.length; i++) { %>
+                    <div class="col my-3">
+                        <div class="card mb-2 shadow-sm h-100" id="product-card"
+                            data-id=<%= products[i].id %>>
+                            <img src=<%= products[i].image %> alt=<%= products[i].name %> class="card-img-top">
+                            <div class="card-body text-center">
+                                <h5 class="card-title my-2"><%= products[i].name %></h5>
+                                <p style="font-size: 12px;"><%= products[i].description %></p>
+                                <p class="text-muted my-0" style="font-size: 12px;">Mulai dari</p>
+                                <h6 class="text-bold mb-2">Rp
+                                    <%= products[i].multiplier.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") %></h6>
+                                <p class="text-muted mb-0" style="font-size: 12px;">Berakhir pada</p>
+                                <h6 class="text-bold" style="bottom: 0%;"><%= products[i].end_date.format('DD MMM YYYY') %>, pukul
+                                    <%= products[i].end_date.format('HH:mm') %> WIB</h6>
+                                
+                            </div>
+                            <div class="card-footer text-center">
+                                <% if (products[i].user.id !== logged_in_id) { %>
+                                    <p class="my-0"><a href="/auction-room?id=<%= products[i].id %>" class="btn btn-primary">Tawar</a></p>
+                                <% } else { %>
+                                    <p class="my-0"><a href="/auction-room?id=<%= products[i].id %>" class="btn btn-primary">Edit</a></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
             </div>
         </div>
     </div>

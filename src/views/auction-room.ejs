@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('partials/navbar') %>
+        <div class="row">
+            <div class="col-12">
+                <h1>Ruang Lelang</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a href="" class="btn btn-primary">
+                    Tawar 
+                    <% if (histories.length === 0) { %>
+                        Rp.<%= formatPrice(product.multiplier) %>
+                    <% } else { %>
+
+                    <% } %>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <script src="js/checklogin.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

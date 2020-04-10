@@ -3,8 +3,8 @@ const path = require('path');
 const dbUser = require('./db/user');
 const dbProduct = require('./db/products');
 const bodyParser = require('body-parser');
-
-
+const dbAuctionHistories = require('./db/auction-histories');
+const utilities = require('./utilities');
 
 const app = express();
 
@@ -20,9 +20,39 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.get('/dashboard', (req, res) => {
-    res.render('dashboard');
+app.get('/dashboard', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        let products = await dbProduct.activeProducts();
+
+        res.render('dashboard', {
+            products: products,
+            logged_in_id: id,
+        });
+    } else {
+        // redirect ke hal login
+        res.redirect('/');
+    }
 });
+
+app.get('/auction-room', async (req, res) => {
+    const product_id = req.query.id;
+
+    const product = await dbProduct.get(product_id);
+    if (product) {
+        let histories = await dbAuctionHistories.getAuctions(product_id);
+
+        res.render('auction-room', {
+            histories: histories,
+            product: product,
+            formatPrice: utilities.formatPrice,
+        });
+    } else {
+        res.send('Not found');
+    }
+});
+
 
 app.get('/register', (req, res) => {
     res.render('register');
