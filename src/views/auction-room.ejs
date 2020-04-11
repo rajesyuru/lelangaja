@@ -8,27 +8,61 @@
     <div class="container-fluid">
         <%- include('partials/navbar') %>
         <div class="row">
-            <div class="col-12">
-                <h1>Ruang Lelang</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <a href="" class="btn btn-primary">
-                    Tawar 
-                    <% if (histories.length === 0) { %>
-                        Rp.<%= formatPrice(product.multiplier) %>
-                    <% } else { %>
-
-                    <% } %>
-                </a>
+            <div class="container mx-4 p-0">
+                <div class="row mt-5">
+                    <div class="col-12 col-md-4">
+                        <img class="w-100" src=<%= product.image %> alt="">
+                        <div class="card my-5">
+                            <div class="card-header">
+                                <h3 class="text-center">Histori penawaran</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <% if (histories.length === 0) { %>
+                                        <p class="text-center">Saat ini belum ada yang menawar</p>
+                                    <% } else { %>
+                                        <% for (history of histories) { %>
+                                            <% if (history.user.id === me_id) { %>
+                                                <li class="list-group-item list-group-item-success">
+                                                    <strong>Anda</strong> menawar sebesar Rp.<%= formatPrice(history.price) %> pada <%= history.created_at.format('DD MMM YYYY') %> pukul <%= history.created_at.format('HH:mm') %> WIB.
+                                                </li>
+                                            <% } else { %>
+                                                <li class="list-group-item list-group-item-success">
+                                                    <%= history.user.name %> menawar sebesar Rp.<%= formatPrice(history.price) %> pada <%= history.created_at.format('DD MMM YYYY') %> pukul <%= history.created_at.format('HH:mm') %> WIB.
+                                                </li>
+                                            <% } %>
+                                        <% } %>
+                                     <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 p-0">
+                        <h2><%= product.name %></h2>
+                        <p><%= product.description %></p>
+                        <br>
+                        <p class="my-0">Pelelang:</p>
+                        <p class="font-weight-bold"><%= product.owner.name %></p>
+                        <p class="my-0">Berakhir pada:</p>
+                        <p class="font-weight-bold"> <%= product.end_date.format('DD MMM YYYY') %>, pukul <%= product.end_date.format('HH:mm') %> WIB</p>
+                        <% if (product.owner.id === me_id) { %>
+                            <a href="#" data-product-id="<%= product.id %>" class="btn btn-primary" id="bid">
+                                Akhiri lelang
+                            </a>
+                        <% } else { %>
+                            <a href="#" data-product-id="<%= product.id %>" data-bid-price="<%= bidPrice %>" class="btn btn-primary" id="bid">
+                                Tawar Rp.<%= formatPrice(bidPrice) %>
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <%- include('partials/footer') %>
     <script src="js/checklogin.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="js/auction-room.js"></script>
 </body>
 
 </html>

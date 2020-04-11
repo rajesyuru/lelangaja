@@ -45,9 +45,14 @@ where
     `;
 
     let results = await client.query(sql);
+    let out = [];
 
-    return results.rows.map(row => {
-        return {
+    for (let i = 0; i < results.rows.length; i++) {
+        const row = results.rows[i];
+
+        const latest_bid = await exports.getLatestBid(row.id);
+
+        out.push({
             id: row.id,
             name: row.name,
             multiplier: row.multiplier,
@@ -59,18 +64,25 @@ where
                 name: row.user_name,
                 email: row.user_email,
             },
-        };
-    });
+            latest_bid: latest_bid,
+        });
+    }
+
+    return out;
 };
 
 exports.get = async (id) => {
     const sql = `
     select
-        *
+        p.*,
+        u.name as owner_name,
+        u.id as owner_id
     from
-        products
+        products p,
+        users u
     where
-        id = $1
+        u.id = p.user_id and
+        p.id = $1
     `;
 
     const values = [id];
@@ -87,8 +99,35 @@ exports.get = async (id) => {
             image: row.image,
             multiplier: row.multiplier,
             end_date: moment(row.end_date),
+            owner: {
+                id: row.owner_id,
+                name: row.owner_name,
+            }
         };
     } else {
         return false;
     }
 }
+
+exports.getLatestBid = async (id) => {
+    const sql = `
+select 
+	price
+from 
+	auction_histories ah 
+where
+	product_id = $1
+order by
+	created_at desc 
+    `;
+
+    const values = [id];
+
+    let results = await client.query(sql, values);
+
+    if (results.rows.length > 0) {
+        return results.rows[0].price;
+    } else {
+        return 0;
+    }
+};

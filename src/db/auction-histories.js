@@ -31,6 +31,8 @@ where
     ah.user_id = u.id and
     ah.product_id = p.id and
     ah.product_id = $1
+order by
+    created_at desc
     `;
 
     const values = [product_id];
@@ -57,4 +59,20 @@ where
             },
         };
     });
+};
+
+exports.add = async (user_id, product_id, price) => {
+    const id = uuid();
+
+    const sql = `
+    insert into
+        auction_histories
+        (id, user_id, product_id, price, created_at)
+    values
+        ($1, $2, $3, $4, now())
+    `;
+
+    const values = [id, user_id, product_id, price];
+
+    await client.query(sql, values);
 };

@@ -29,6 +29,7 @@ app.get('/dashboard', async (req, res) => {
         res.render('dashboard', {
             products: products,
             logged_in_id: id,
+            formatPrice: utilities.formatPrice,
         });
     } else {
         // redirect ke hal login
@@ -37,19 +38,62 @@ app.get('/dashboard', async (req, res) => {
 });
 
 app.get('/auction-room', async (req, res) => {
-    const product_id = req.query.id;
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+        const product_id = req.query.id;
 
-    const product = await dbProduct.get(product_id);
-    if (product) {
-        let histories = await dbAuctionHistories.getAuctions(product_id);
+        const product = await dbProduct.get(product_id);
+        if (product) {
+            let histories = await dbAuctionHistories.getAuctions(product_id);
 
-        res.render('auction-room', {
-            histories: histories,
-            product: product,
-            formatPrice: utilities.formatPrice,
-        });
+            const latestBid = await dbProduct.getLatestBid(product_id);
+            const bidPrice = latestBid + product.multiplier;
+
+            res.render('auction-room', {
+                me_id: id,
+                histories: histories,
+                product: product,
+                bidPrice: bidPrice,
+                formatPrice: utilities.formatPrice,
+            });
+        } else {
+            res.send('Not found');
+        }
     } else {
         res.send('Not found');
+    }
+});
+
+app.post('/api/bid', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        const price = req.body.price;
+        const product_id = req.body.product_id;
+
+        const product = await dbProduct.get(product_id);
+
+        if (!price) {
+            res.send({
+                status: 'error',
+                message: 'Harga wajib diisi',
+            });
+        } else if (!product) {
+            res.send({
+                status: 'error',
+                message: 'ID Produk tidak valid',
+            });
+        } else {
+            await dbAuctionHistories.add(id, product_id, price);
+
+            res.send({
+                status: 'success',
+            });
+        }
+    } else {
+        res.send({
+            status: 'error',
+        });
     }
 });
 
