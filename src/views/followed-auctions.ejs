@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('partials/navbar') %>
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <% if (wonBids.length > 0) { %>
+                            <% for (wonBid of wonBids) { %>
+                                <div class="card my-5 shadow-sm">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4 h-100">
+                                            <img class="w-100" src="<%= wonBid.image %>" alt="<%= wonBid.name %>">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body h-100">
+                                                <h3 class="card-title"><%= wonBid.name %></h3>
+                                                <h6>Pemenang:</h6>
+                                                <h5 class="font-weight-bold">Anda</h5>
+                                                <h6>Harga terakhir:</h6>
+                                                <h5 class="font-weight-bold">Rp. <%= wonBid.latest_bid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") %></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <h1 class="text-muted">Anda belum memenangkan pelelangan</h1>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <script src="js/checklogin.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

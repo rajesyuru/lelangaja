@@ -12,7 +12,7 @@
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <img class="w-100" src=<%= product.image %> alt="">
-                        <div class="card my-5">
+                        <div class="card my-5" id="card-history-top">
                             <div class="card-header">
                                 <h3 class="text-center">Histori penawaran</h3>
                             </div>
@@ -69,10 +69,44 @@
                                 </span>
                             <% } %>
                         <% } else { %>
-                            <a href="#" data-product-id="<%= product.id %>" data-bid-price="<%= bidPrice %>" class="btn btn-primary" id="bid">
-                                Tawar Rp.<%= formatPrice(bidPrice) %>
-                            </a>
+                            <% if (product.status !== 'selesai') { %>
+                                <a href="#" data-product-id="<%= product.id %>" data-bid-price="<%= bidPrice %>" class="btn btn-primary" id="bid">
+                                    Tawar Rp.<%= formatPrice(bidPrice) %>
+                                </a>
+                            <% } else { %>
+                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="right" title="Belum ada yang menawar">
+                                    <a href="#" data-product-id="<%= product.id %>" data-bid-price="<%= bidPrice %>" class="btn btn-primary disabled">
+                                        Tawar Rp.<%= formatPrice(bidPrice) %>
+                                    </a>
+                                </span>
+                            <% } %>
                         <% } %>
+                    </div>
+                    <div class="col-12" id="card-history-bottom">
+                        <div class="card my-5">
+                            <div class="card-header">
+                                <h3 class="text-center">Histori penawaran</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <% if (histories.length === 0) { %>
+                                        <p class="text-center">Saat ini belum ada yang menawar</p>
+                                    <% } else { %>
+                                        <% for (history of histories) { %>
+                                            <% if (history.user.id === me_id) { %>
+                                                <li class="list-group-item list-group-item-success">
+                                                    <strong>Anda</strong> menawar sebesar Rp.<%= formatPrice(history.price) %> pada <%= history.created_at.format('DD MMM YYYY') %> pukul <%= history.created_at.format('HH:mm') %> WIB.
+                                                </li>
+                                            <% } else { %>
+                                                <li class="list-group-item list-group-item-success">
+                                                    <%= history.user.name %> menawar sebesar Rp.<%= formatPrice(history.price) %> pada <%= history.created_at.format('DD MMM YYYY') %> pukul <%= history.created_at.format('HH:mm') %> WIB.
+                                                </li>
+                                            <% } %>
+                                        <% } %>
+                                     <% } %>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

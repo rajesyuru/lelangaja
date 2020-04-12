@@ -133,6 +133,22 @@ app.post('/api/end-bid', async (req, res) => {
     }
 });
 
+app.get('/followed-auctions', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        let wonBids = await dbProduct.wonBid(id);
+
+        res.render('followed-auctions', {
+            wonBids: wonBids
+        })
+    } else {
+        res.send({
+            status: 'error',
+        });
+    }
+})
+
 
 app.get('/register', (req, res) => {
     res.render('register');

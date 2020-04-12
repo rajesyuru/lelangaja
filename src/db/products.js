@@ -182,3 +182,39 @@ exports.endBid = async (id, winner_id) => {
 
     await client.query(sql, values);
 }
+
+exports.wonBid = async (user_id) => {
+    const sql = `
+    select
+        *
+    from
+        products
+    where
+        status = 'selesai' and
+        winner_id = $1
+    `;
+
+    const values = [user_id];
+
+    let results = await client.query(sql, values);
+    let out = [];
+
+    for (let i = 0; i < results.rows.length; i++) {
+        const row = results.rows[i];
+
+        const latest_bid = await exports.getLatestBid(row.id);
+
+        out.push({
+            id: row.id,
+            name: row.name,
+            image: row.image,
+            winner: {
+                id: row.user_id,
+                name: row.user_name,
+            },
+            latest_bid: latest_bid,
+        });
+    }
+
+    return out;
+};
