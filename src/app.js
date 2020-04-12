@@ -97,6 +97,42 @@ app.post('/api/bid', async (req, res) => {
     }
 });
 
+app.post('/api/end-bid', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const current_user = req.headers.cookie.split('=')[1];
+        const product_id = req.body.product_id;
+
+        let product = await dbProduct.get(product_id);
+        if (!product) {
+            res.send({
+                status: 'error',
+                message: 'ID produk tidak valid'
+            })
+        } else if (product.owner.id !== current_user) {
+            res.send({
+                status: 'error',
+                message: 'Anda bukan pemilik produk ini'
+            })
+        } else {
+            let bidWinner = await dbProduct.bidWinner(product_id);
+            if (bidWinner !== null) {
+                await dbProduct.endBid(product_id, bidWinner.winner_id);
+                res.send({
+                    status: 'success'
+                })
+            } else {
+                res.send({
+                    status: 'error'
+                })
+            }
+        };
+    } else {
+        res.send({
+            status: 'error',
+        });
+    }
+});
+
 
 app.get('/register', (req, res) => {
     res.render('register');

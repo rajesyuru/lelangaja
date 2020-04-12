@@ -14,7 +14,7 @@ client.connect();
 exports.addProduct = async (user, product) => {
     product.id = uuid();
 
-    const sql = 'insert into products (id, user_id, name, image, description, multiplier, end_date) values ($1, $2, $3, $4, $5, $6, $7)';
+    const sql = `insert into products (id, user_id, name, image, description, multiplier, end_date, status, winner_id) values ($1, $2, $3, $4, $5, $6, $7, 'belum selesai', '')`;
 
     const values = [
         product.id,
@@ -41,7 +41,8 @@ from
 	users u
 where
 	p.user_id = u.id and 
-	end_date > now() 
+    end_date > now() and
+    p.status <> 'selesai'
     `;
 
     let results = await client.query(sql);
@@ -102,7 +103,8 @@ exports.get = async (id) => {
             owner: {
                 id: row.owner_id,
                 name: row.owner_name,
-            }
+            },
+            status: row.status
         };
     } else {
         return false;
@@ -131,3 +133,52 @@ order by
         return 0;
     }
 };
+
+
+
+exports.bidWinner = async (id) => {
+    const sql = `
+    select
+        *
+    from
+        auction_histories
+    where
+        product_id = $1
+    order by
+	    created_at desc
+    `;
+
+    const values = [id];
+
+    let results = await client.query(sql, values);
+
+    if (results.rows.length > 0) {
+        let row = results.rows[0];
+
+        return {
+            winner_id: row.user_id,
+            product_id: row.product_id,
+            price: row.price
+        };
+
+    } else {
+        return null;
+    }
+};
+
+exports.endBid = async (id, winner_id) => {
+    const sql = `
+    update
+        products
+    set
+        end_date = now(),
+        status = $1,
+        winner_id = $2
+    where
+        id = $3
+    `;
+
+    let values = ['selesai', winner_id, id];
+
+    await client.query(sql, values);
+}
