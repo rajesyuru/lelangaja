@@ -49,11 +49,16 @@ app.get('/auction-room', async (req, res) => {
             const latestBid = await dbProduct.getLatestBid(product_id);
             const bidPrice = latestBid + product.multiplier;
 
+            const bidWinner = await dbProduct.bidWinner(product_id);
+
+            // console.log(product.status);
+
             res.render('auction-room', {
                 me_id: id,
                 histories: histories,
                 product: product,
                 bidPrice: bidPrice,
+                bidWinner: bidWinner,
                 formatPrice: utilities.formatPrice,
             });
         } else {

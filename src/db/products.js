@@ -40,9 +40,7 @@ from
 	products p,
 	users u
 where
-	p.user_id = u.id and 
-    end_date > now() and
-    p.status <> 'selesai'
+	p.user_id = u.id
     `;
 
     let results = await client.query(sql);
@@ -60,6 +58,7 @@ where
             image: row.image,
             description: row.description,
             end_date: moment(row.end_date),
+            status: row.status,
             user: {
                 id: row.user_id,
                 name: row.user_name,
@@ -139,11 +138,15 @@ order by
 exports.bidWinner = async (id) => {
     const sql = `
     select
-        *
+        h.*,
+        u.id,
+        u.name as user_name
     from
-        auction_histories
+        auction_histories h,
+        users u
     where
-        product_id = $1
+        product_id = $1 and
+        h.user_id = u.id
     order by
 	    created_at desc
     `;
@@ -157,6 +160,7 @@ exports.bidWinner = async (id) => {
 
         return {
             winner_id: row.user_id,
+            winner_name: row.user_name,
             product_id: row.product_id,
             price: row.price
         };

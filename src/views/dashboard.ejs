@@ -30,13 +30,21 @@
                                 <h6 class="text-bold mb-2">Rp
                                     <%= products[i].multiplier.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") %></h6>
                                 <p class="text-muted mb-0" style="font-size: 12px;">Berakhir pada</p>
-                                <h6 class="text-bold" style="bottom: 0%;"><%= products[i].end_date.format('DD MMM YYYY') %>, pukul
-                                    <%= products[i].end_date.format('HH:mm') %> WIB</h6>
-                                
+                                <% if (products[i].status !== 'selesai') { %>
+                                    <h6 class="text-bold"><%= products[i].end_date.format('DD MMM YYYY') %>, pukul
+                                        <%= products[i].end_date.format('HH:mm') %> WIB</h6>
+                                <% } else { %>
+                                    <h6 class="text-bold"><%= products[i].end_date.format('DD MMM YYYY') %>, pukul
+                                        <%= products[i].end_date.format('HH:mm') %> WIB (Telah Berakhir)</h6>
+                                <% } %>
                             </div>
                             <div class="card-footer text-center">
                                 <% if (products[i].user.id !== logged_in_id && logged_in_id !== 'admin1234567890') { %>
-                                    <p class="my-0"><a href="/auction-room?id=<%= products[i].id %>" class="btn btn-primary">Tawar</a></p>
+                                    <% if (products[i].status !== 'selesai') { %>
+                                        <p class="my-0"><a href="/auction-room?id=<%= products[i].id %>" class="btn btn-primary">Tawar</a></p>
+                                    <% } else { %>
+                                        <p class="my-0"><a href="/auction-room?id=<%= products[i].id %>" class="btn btn-primary">Lihat Lelang</a></p>
+                                    <% } %>
                                 <% } else { %>
                                     <p class="my-0"><a href="/auction-room?id=<%= products[i].id %>" class="btn btn-primary">Lihat Lelang</a></p>
                                 <% } %>

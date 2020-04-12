@@ -49,24 +49,29 @@
                         <% } else { %> 
                             <p class="font-weight-bold">Pelelangan telah selesai</p>
                         <% } %>
+                        <% if (product.status === 'selesai') { %>
+                            <p class="my-0">Pemenang:</p>
+                            <% if (bidWinner.winner_id === me_id) { %>
+                                <p class="font-weight-bold">Anda</p>
+                            <% } else { %>
+                                <p class="font-weight-bold"><%= bidWinner.winner_name %></p>
+                            <% } %>
+                        <% } %>
                         <% if (product.owner.id === me_id) { %>
                             <% if (histories.length !== 0) { %>
-                                <a href="#" data-product-id="<%= product.id %>" class="btn btn-primary" id="end-bid">
+                                <% if (product.status !== 'selesai') { %>
+                                    <a href="#" data-product-id="<%= product.id %>" class="btn btn-primary" id="end-bid">
+                                        Akhiri lelang
+                                    </a>
+                                <% } else { %>
+                                    <a href="#" style="pointer-events: none;" data-product-id="<%= product.id %>" class="btn btn-primary disabled" aria-disabled="true">
+                                        Akhiri lelang
+                                    </a>  
+                                <% } %>
+                            <% } else { %>
+                                <a href="#" style="pointer-events: none;" data-product-id="<%= product.id %>" class="btn btn-primary disabled" aria-disabled="true">
                                     Akhiri lelang
                                 </a>
-                            <% } else if (product.status === 'selesai') { %>
-                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="right" title="Pelelangan telah berakhir">
-                                    <a href="#" style="pointer-events: none;" data-product-id="<%= product.id %>" class="btn btn-primary disabled" aria-disabled="true">
-                                        Akhiri lelang
-                                    </a>
-                                </span>
-                                
-                            <% } else { %>
-                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="right" title="Belum ada yang menawar">
-                                    <a href="#" style="pointer-events: none;" data-product-id="<%= product.id %>" class="btn btn-primary disabled" aria-disabled="true">
-                                        Akhiri lelang
-                                    </a>
-                                </span>
                             <% } %>
                         <% } else { %>
                             <% if (product.status !== 'selesai') { %>
@@ -74,11 +79,9 @@
                                     Tawar Rp.<%= formatPrice(bidPrice) %>
                                 </a>
                             <% } else { %>
-                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="right" title="Belum ada yang menawar">
-                                    <a href="#" data-product-id="<%= product.id %>" data-bid-price="<%= bidPrice %>" class="btn btn-primary disabled">
-                                        Tawar Rp.<%= formatPrice(bidPrice) %>
-                                    </a>
-                                </span>
+                                <a href="#" data-product-id="<%= product.id %>" data-bid-price="<%= bidPrice %>" class="btn btn-primary disabled">
+                                    Tawar Rp.<%= formatPrice(bidPrice) %>
+                                </a>
                             <% } %>
                         <% } %>
                     </div>
