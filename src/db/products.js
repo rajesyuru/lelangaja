@@ -192,6 +192,8 @@ exports.wonBid = async (user_id) => {
     where
         status = 'selesai' and
         winner_id = $1
+    order by
+	    end_date desc
     `;
 
     const values = [user_id];
@@ -218,3 +220,45 @@ exports.wonBid = async (user_id) => {
 
     return out;
 };
+
+exports.sold = async (id) => {
+    const sql = `
+    select
+        p.*,
+        u.id as winner_id,
+        u.name as winner_name
+    from 
+        products p,
+        users u
+    where
+        status = 'selesai' and
+        p.winner_id = u.id and
+        user_id = $1
+    order by
+	    p.end_date desc
+    `;
+
+    const values = [id];
+
+    let results = await client.query(sql, values);
+    let out = [];
+
+    for (let i = 0; i < results.rows.length; i++) {
+        const row = results.rows[i];
+
+        const latest_bid = await exports.getLatestBid(row.id);
+
+        out.push({
+            id: row.id,
+            name: row.name,
+            image: row.image,
+            winner: {
+                id: row.winner_id,
+                name: row.winner_name,
+            },
+            latest_bid: latest_bid,
+        });
+    }
+
+    return out;
+}

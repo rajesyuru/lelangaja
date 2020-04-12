@@ -11,11 +11,13 @@ fetch('/check-login')
                 document.getElementById('navListUsers').classList.remove('d-none');
                 document.getElementById('navAddProduct').classList.add('d-none');
                 document.getElementById('navFollowedAuctions').classList.add('d-none');
+                document.getElementById('navSold').classList.add('d-none');
             } else {
                 document.getElementById('navEditProfile').classList.remove('d-none');
                 document.getElementById('navListUsers').classList.add('d-none');
                 document.getElementById('navAddProduct').classList.remove('d-none');
                 document.getElementById('navFollowedAuctions').classList.remove('d-none');
+                document.getElementById('navSold').classList.remove('d-none');
             }
 
 

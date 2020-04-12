@@ -118,7 +118,7 @@ app.post('/api/end-bid', async (req, res) => {
             if (bidWinner !== null) {
                 await dbProduct.endBid(product_id, bidWinner.winner_id);
                 res.send({
-                    status: 'success'
+                    status: 'success',
                 })
             } else {
                 res.send({
@@ -147,7 +147,24 @@ app.get('/followed-auctions', async (req, res) => {
             status: 'error',
         });
     }
-})
+});
+
+app.get('/sold', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        let sold = await dbProduct.sold(id);
+
+        res.render('sold', {
+            sold: sold
+        })
+        
+    } else {
+        res.send({
+            status: 'error',
+        });
+    }
+});
 
 
 app.get('/register', (req, res) => {
