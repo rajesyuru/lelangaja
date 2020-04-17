@@ -17,11 +17,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
-    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
-        res.render('dashboard')
-    } else {
-        res.render('index');
-    }
+    res.render('index');
 });
 
 app.get('/dashboard', async (req, res) => {

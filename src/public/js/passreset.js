@@ -1,3 +1,15 @@
+var unsaved = false;
+
+$(":input").change(function(){ //triggers change in all input fields including text type
+    unsaved = true;
+});
+
+function unloadPage(){ 
+    if(unsaved){
+        return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+    }
+}
+
 document.getElementById('form-passreset').addEventListener('submit', e => {
     e.preventDefault();
 
@@ -27,3 +39,5 @@ document.getElementById('form-passreset').addEventListener('submit', e => {
         }
     });
 });
+
+window.onbeforeunload = unloadPage;
