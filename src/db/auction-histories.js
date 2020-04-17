@@ -1,6 +1,7 @@
 const uuid = require('uuid/v4');
 const { Client } = require('pg');
 const moment = require('moment');
+const tz = require('moment-timezone');
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:jakarta123@localhost:5432/lelangaja'
 ;
@@ -55,7 +56,7 @@ order by
                 description: row.product_description,
                 image: row.product_image,
                 multiplier: row.product_multiplier,
-                end_date: moment(row.product_end_date),
+                end_date: moment.tz(row.product_end_date, 'Asia/Jakarta'),
             },
         };
     });

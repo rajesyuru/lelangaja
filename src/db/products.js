@@ -1,6 +1,7 @@
 const uuid = require('uuid/v4');
 const { Client } = require('pg');
 const moment = require('moment');
+const tz = require('moment-timezone');
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:jakarta123@localhost:5432/lelangaja'
 ;
@@ -40,7 +41,9 @@ from
 	products p,
 	users u
 where
-	p.user_id = u.id
+    p.user_id = u.id
+order by
+    p.end_date desc
     `;
 
     let results = await client.query(sql);
@@ -57,7 +60,7 @@ where
             multiplier: row.multiplier,
             image: row.image,
             description: row.description,
-            end_date: moment(row.end_date),
+            end_date: moment.tz(row.end_date, 'Asia/Jakarta'),
             status: row.status,
             user: {
                 id: row.user_id,
@@ -98,7 +101,7 @@ exports.get = async (id) => {
             description: row.description,
             image: row.image,
             multiplier: row.multiplier,
-            end_date: moment(row.end_date),
+            end_date: moment.tz(row.end_date, 'Asia/Jakarta'),
             owner: {
                 id: row.owner_id,
                 name: row.owner_name,
