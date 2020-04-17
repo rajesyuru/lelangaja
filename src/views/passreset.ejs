@@ -7,30 +7,30 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4 mx-auto border shadow-sm p-3 mt-2">
+                
                 <div id="message-success" class="alert alert-success d-none">
-                    <p class="message">Registrasi berhasil, silahkan login di <a href="/">sini</a></p>
+                    <p class="message">Reset password berhasil, silahkan login di <a href="/">sini</a></p>
                 </div>
                 <div id="message-error" class="alert alert-danger d-none">
                     <p class="message"></p>
                 </div>
-                <form action="" id="form-login">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" class="form-control">
-                    </div>
+                <form action="" id="form-passreset">
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" name="password" id="password" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <p class="mt-2">Don't have an account? <a href="/register">sign up here</a></p>
-                    <a href="/reset-email">Forgot your password?</a>
+                    <div class="form-group">
+                        <label for="password2">Re-type Password</label>
+                        <input type="password" name="password2" id="password2" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Reset</button>
                 </form>
             </div>
         </div>
     </div>
     
     <%- include('partials/footer') %>
-    <script src="js/main.js"></script>
+    <script src="js/checklogin.js"></script>
+    <script src="js/passreset.js"></script>
 </body>
 </html>

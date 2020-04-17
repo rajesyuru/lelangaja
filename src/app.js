@@ -17,7 +17,11 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
-    res.render('index');
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        res.render('dashboard')
+    } else {
+        res.render('index');
+    }
 });
 
 app.get('/dashboard', async (req, res) => {
@@ -173,6 +177,7 @@ app.get('/sold', async (req, res) => {
 
 
 app.get('/register', (req, res) => {
+
     res.render('register');
 });
 
@@ -224,7 +229,7 @@ app.post('/register', async (req, res) => {
             status: 'error',
             message: 'Email mesti diisi'
         });
-    } else if (req.body.password.trim().length <= 8) {
+    } else if (req.body.password.trim().length <= 7) {
         res.send({
             status: 'error',
             message: 'Password mesti lebih dari 8 karakter'
@@ -299,6 +304,93 @@ app.post('/login', async (req, res) => {
             });
         }
     }
+});
+
+app.get('/reset-email', (req, res) => {
+    res.clearCookie('id');
+
+    res.render('passreset-email');
+})
+
+app.get('/reset-password', (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        res.render('passreset');
+    } else {
+        res.redirect('/');
+    }
+})
+
+app.post('/reset-email', async (req, res) => {
+    const email = req.body.email;
+
+    if (!email || email.trim().length === 0) {
+        res.send({
+            status: 'error',
+            message: 'Email mesti diisi'
+        });
+    } else {
+        let user = await dbUser.doesEmailExistsforReset(email);
+
+        if (user.length === 0) {
+            res.send({
+                status: 'error',
+                message: 'Email tidak ditemukan'
+            });
+        } else {
+            // console.log(user[0].id)
+            res.setHeader('Set-Cookie', `id=${user[0].id}`);
+            res.send({
+                status: 'success'
+            });          
+        };
+    };
+});
+
+app.post('/reset-password', async (req, res) => {
+    if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
+        const id = req.headers.cookie.split('=')[1];
+
+        const password = req.body.password;
+        const password2 = req.body.password2;
+
+        if (password.trim().length <= 7) {
+            res.send({
+                status: 'error',
+                message: 'Password mesti lebih dari 8 karakter'
+            });
+        } else if (password2.trim().length === 0) {
+            res.send({
+                status: 'error',
+                message: 'Password mesti diketik ulang'
+            });
+        } else if (password != password2) {
+            res.send({
+                status: 'error',
+                message: 'Password yang anda masukkan tidak sama'
+            });
+        } else {
+            let result = await dbUser.updateUser(id, {password: password});
+
+            if (result) {
+                res.clearCookie('id');
+                res.send({
+                    status: 'success',
+                });
+            } else {
+                res.send({
+                    status: 'error',
+                    message: 'Gagal update user',
+                });
+            }
+        }
+    }
+
+    res.send({
+        status: 'error',
+    });
+    
+
+
 });
 
 app.get('/check-login', async (req, res) => {

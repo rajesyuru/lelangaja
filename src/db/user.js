@@ -26,6 +26,14 @@ exports.doesEmailExists = async (email) => {
     return results.rows.length > 0;
 };
 
+exports.doesEmailExistsforReset = async (email) => {
+    const sql = 'select * from users where email = $1';
+    const values = [email];
+    let results = await client.query(sql, values);
+
+    return results.rows;
+};
+
 exports.login = async (email, password) => {
     const sql = 'select * from users where email = $1 and password = $2';
     const values = [email, password];
