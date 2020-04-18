@@ -50,28 +50,26 @@
                             <p class="font-weight-bold">Pelelangan telah selesai</p>
                         <% } %>
                         <% if (product.status === 'selesai') { %>
-                            <p class="my-0">Pemenang:</p>
-                            <% if (bidWinner.winner_id === me_id) { %>
-                                <p class="font-weight-bold">Anda</p>
+                            <% if (bidWinner === null) { %>
+                                <p class="font-weight-bold">Tidak ada pemenang</p>
                             <% } else { %>
-                                <p class="font-weight-bold"><%= bidWinner.winner_name %></p>
+                                <p class="my-0">Pemenang:</p>
+                                    <% if (bidWinner.winner_id === me_id) { %>
+                                        <p class="font-weight-bold">Anda</p>
+                                    <% } else { %>
+                                        <p class="font-weight-bold"><%= bidWinner.winner_name %></p>
+                                    <% } %>
                             <% } %>
                         <% } %>
                         <% if (product.owner.id === me_id) { %>
-                            <% if (histories.length !== 0) { %>
-                                <% if (product.status !== 'selesai') { %>
-                                    <a href="#" data-product-id="<%= product.id %>" class="btn btn-primary" id="end-bid">
-                                        Akhiri lelang
-                                    </a>
-                                <% } else { %>
-                                    <a href="#" style="pointer-events: none;" data-product-id="<%= product.id %>" class="btn btn-primary disabled" aria-disabled="true">
-                                        Akhiri lelang
-                                    </a>  
-                                <% } %>
+                            <% if (product.status !== 'selesai') { %>
+                                <a href="#" data-product-id="<%= product.id %>" class="btn btn-primary" id="end-bid">
+                                    Akhiri lelang
+                                </a>
                             <% } else { %>
                                 <a href="#" style="pointer-events: none;" data-product-id="<%= product.id %>" class="btn btn-primary disabled" aria-disabled="true">
                                     Akhiri lelang
-                                </a>
+                                </a>  
                             <% } %>
                         <% } else { %>
                             <% if (product.status !== 'selesai') { %>

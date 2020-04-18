@@ -12,6 +12,10 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(bodyParser.json());
 
+setInterval(() => {
+    dbProduct.batchAuctionEnd();
+ }, 60*1000);
+
 app.set('view engine', 'ejs');
 
 app.set('views', path.join(__dirname, 'views'));
@@ -126,8 +130,9 @@ app.post('/api/end-bid', async (req, res) => {
                     status: 'success',
                 })
             } else {
+                await dbProduct.endBid(product_id, null);
                 res.send({
-                    status: 'error'
+                    status: 'success'
                 })
             }
         };

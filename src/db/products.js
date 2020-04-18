@@ -147,7 +147,7 @@ exports.bidWinner = async (id) => {
         auction_histories h,
         users u
     where
-        product_id = $1 and
+        h.product_id = $1 and
         h.user_id = u.id
     order by
 	    created_at desc
@@ -268,3 +268,31 @@ exports.sold = async (id) => {
 
     return out;
 }
+
+exports.batchAuctionEnd = async () => {
+    // cari semua produk yang end_date nya di masa lalu dan status != null
+    const sql = `
+select
+    *
+from 
+	products
+where
+    end_date < now() and 
+    status is distinct from 'selesai'
+    `;
+
+    let results = await client.query(sql);
+
+    for (let i = 0; i < results.rows.length; i++) {
+        let product = results.rows[i];
+
+        // cari pemenang
+        const winner = await exports.bidWinner(product.id);
+
+        if (winner) {
+            await exports.endBid(product.id, winner.id);
+        } else {
+            await exports.endBid(product.id, '');
+        }
+    }
+};

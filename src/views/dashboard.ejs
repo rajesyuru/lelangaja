@@ -19,7 +19,11 @@
                             <img src=<%= products[i].image %> alt=<%= products[i].name %> class="card-img-top">
                             <div class="card-body text-center">
                                 <h5 class="card-title my-2"><%= products[i].name %></h5>
-                                <p style="font-size: 12px;"><%= products[i].description.split(' ').filter((word, index) => index <= 20).join(' ') %>...</p>
+                                <% if (products[i].description.split(' ').length < 20) { %>
+                                    <p style="font-size: 12px;"><%= products[i].description %></p>
+                                <% } else { %>
+                                    <p style="font-size: 12px;"><%= products[i].description.split(' ').filter((word, index) => index <= 20).join(' ') %>...</p>
+                                <% } %>
                                 <p class="text-muted my-0" style="font-size: 12px;">Pelelang</p>
                                 <% if (products[i].user.id !== logged_in_id) { %>
                                     <p class="my-0"><%= products[i].user.name %></p>
