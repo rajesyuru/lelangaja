@@ -43,7 +43,7 @@ order by
         return {
             id: row.id,
             price: row.price,
-            created_at: moment(row.created_at),
+            created_at: moment.tz(row.created_at, 'Asia/Jakarta'),
             user: {
                 id: row.user_id,
                 name: row.user_name,
