@@ -1,7 +1,6 @@
 const uuid = require('uuid/v4');
 const { Client } = require('pg');
-const moment = require('moment');
-const tz = require('moment-timezone');
+const moment = require('moment-timezone');
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:jakarta123@localhost:5432/lelangaja'
 ;
