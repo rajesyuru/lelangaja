@@ -31,7 +31,7 @@ exports.doesEmailExistsforReset = async (email) => {
     const values = [email];
     let results = await client.query(sql, values);
 
-    return results.rows;
+    return results.rows[0];
 };
 
 exports.login = async (email, password) => {

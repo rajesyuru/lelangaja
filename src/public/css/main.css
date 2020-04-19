@@ -1,3 +1,11 @@
+img.card-img-top {
+    transition: all 500ms;
+}
+
+img.card-img-top:hover {
+    transform: scaleX(1.1) scaleY(1.1);
+}
+
 #card-history-top {
     display: flex;
 }

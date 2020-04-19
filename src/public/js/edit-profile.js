@@ -14,7 +14,7 @@ document.getElementById('edit-form').addEventListener('submit', function(e) {
 
     if (orName !== name) {
         if (confirm('Are you sure you want to change your user name?')) {
-            fetch('/edit-profile', {
+            fetch('/api/edit-profile', {
                     method: 'POST',
                     body: JSON.stringify({
                         name: name,

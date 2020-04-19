@@ -1,4 +1,4 @@
-fetch('/check-login')
+fetch('/api/check-login')
     .then(response => response.json())
     .then(data => {
         if (data.status === 'error') {

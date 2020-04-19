@@ -14,9 +14,15 @@
                 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                     <% for (let i = 0; i < products.length; i++) { %>
                     <div class="col my-3">
-                        <div class="card mb-2 shadow-sm h-100" id="product-card"
+                        <div class="card mb-2 shadow-sm h-100 overflow-hidden" id="product-card"
                             data-id=<%= products[i].id %>>
-                            <img src=<%= products[i].image %> alt=<%= products[i].name %> class="card-img-top">
+                            <div class="card-img-top overflow-hidden">
+                                <% if (products[i].status === 'selesai') { %>
+                                    <img class="card-img-top" id="selesai" src="<%= products[i].image %>" alt="<%= products[i].name %>">
+                                <% } else { %>
+                                    <img class="card-img-top" src="<%= products[i].image %>" alt="<%= products[i].name %>">
+                                <% } %>
+                            </div>
                             <div class="card-body text-center">
                                 <h5 class="card-title my-2"><%= products[i].name %></h5>
                                 <% if (products[i].description.split(' ').length < 20) { %>
@@ -38,8 +44,8 @@
                                     <h6 class="text-bold"><%= products[i].end_date.format('DD MMM YYYY') %>, pukul
                                         <%= products[i].end_date.format('HH:mm') %> WIB</h6>
                                 <% } else { %>
-                                    <h6 class="text-bold"><%= products[i].end_date.format('DD MMM YYYY') %>, pukul
-                                        <%= products[i].end_date.format('HH:mm') %> WIB (Telah Berakhir)</h6>
+                                    <h6 class="text-bold">Telah Berakhir (<%= products[i].end_date.format('DD MMM YYYY') %>, pukul
+                                        <%= products[i].end_date.format('HH:mm') %> WIB)</h6>
                                 <% } %>
                             </div>
                             <div class="card-footer text-center">
