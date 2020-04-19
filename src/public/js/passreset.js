@@ -29,6 +29,7 @@ document.getElementById('form-passreset').addEventListener('submit', e => {
         dataType: 'json',
         success: function(json) {
             if (json.status === 'success') {
+                unsaved = false;
                 document.getElementById('message-success').classList.remove('d-none');
                 document.getElementById('message-error').classList.add('d-none');
             } else {
