@@ -1,11 +1,3 @@
-img.card-img-top {
-    transition: all 500ms;
-}
-
-img.card-img-top:hover {
-    transform: scaleX(1.1) scaleY(1.1);
-}
-
 #card-history-top {
     display: flex;
 }
@@ -15,29 +7,48 @@ img.card-img-top:hover {
 
 #notification-dropdown-menu {
     max-height: 400px;
-    width: 400px;
+    width: 500px;
+}
+
+#notification-dropdown-item {
     overflow:hidden; 
     overflow-y:scroll;
 }
 
-#notification-dropdown-menu::-webkit-scrollbar {
+#notification-menu {
+    font-size: 15px;
+    font-size: 15px;
+}
+
+#notification-dropdown-item::-webkit-scrollbar {
     width: 5px;
 }
 
-#notification-dropdown-menu::-webkit-scrollbar-thumb {
+#notification-dropdown-item::-webkit-scrollbar-thumb {
     background: #dddddd;
     border-radius: 2px;
 }
 
-#notification-dropdown-menu::-webkit-scrollbar-thumb:hover {
+#notification-dropdown-item::-webkit-scrollbar-thumb:hover {
     background: #b8b8b8;
+}
+
+@media screen and (max-width: 660px) {
+    #notification-dropdown-menu {
+        width: 97vw;
+        right: -166%;
+    }
 }
 
 @media screen and (max-width: 360px) {
     #notification-dropdown-menu {
-        max-height: 400px;
         width: 100vw;
-        right: -167%;
+        right: -166.5%;
+    }
+
+    #notification-menu {
+        font-size: 12px;
+        font-size: 12px;
     }
 }
 

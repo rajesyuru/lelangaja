@@ -22,6 +22,8 @@ router.get('/reset-password', userController.getPassReset);
 router.post('/reset-email', userController.emailReset);
 router.post('/reset-password', userController.passReset);
 
+router.get('/notifications', dashboardController.notifications);
+
 router.get('/add-product', auctionController.addProduct);
 router.get('/followed-auctions', auctionController.followedAuction);
 router.get('/auction-room', auctionController.auctionRoom);

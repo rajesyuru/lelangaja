@@ -17,3 +17,14 @@ exports.index = async (req, res) => {
         res.redirect('/');
     }
 };
+
+exports.notifications = async (req, res) => {
+    if (req.authUser) {
+        const id = req.authUser.id;
+
+        res.render('notifications');
+    } else {
+        // redirect ke hal login
+        res.redirect('/');
+    }
+};
