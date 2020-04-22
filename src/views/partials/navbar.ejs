@@ -1,18 +1,48 @@
 <div class="row">
-    <div class="col-12 p-0">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="col-12 p-0 mb-5">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
             <a class="navbar-brand" href="/dashboard">Lelang Aja</a>
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto d-flex flex-row">
+                <li class="nav-item dropdown my-auto px-4 px-md-2">
+                    <a class="nav-link p-0" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="material-icons align-middle">
+                            notifications
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown" style="max-height: 200px; overflow:hidden; overflow-y:scroll;">
+                        <a href="#" class="text-decoration-none text-dark">
+                            <div class="card shadow-sm mw-100">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4 h-100">
+                                        <img class="w-100" src="<%= solded.image %>" alt="<%= solded.name %>">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body h-100">
+                                            <h5 class="card-title">Nama Produk</h5>
+                                            <h6>Pemenang</h6>
+                                            <h6>Harga terakhir:</h6>
+                                            <h6 class="font-weight-bold">Rp.
+                                                Harga
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span id="userName">User</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-md-right" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown">
                         <a id="navEditProfile" class="dropdown-item" href="/edit-profile">Edit Profile</a>
                         <a id="navListUsers" class="dropdown-item d-none" href="/users">List users</a>
                         <a id="navAddProduct" class="dropdown-item" href="/add-product">Buat Lelang</a>
-                        <a id="navFollowedAuctions" class="dropdown-item" href="/followed-auctions">Pelelangan yang dimenangkan</a>
+                        <a id="navFollowedAuctions" class="dropdown-item" href="/followed-auctions">Pelelangan yang
+                            dimenangkan</a>
                         <a id="navSold" class="dropdown-item" href="/sold">Terjual</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/logout">Logout</a>

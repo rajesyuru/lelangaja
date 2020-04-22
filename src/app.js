@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 
 const routers = require('./routers');
 
+const {sequelize, Wishlist} = require('./models');
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -22,6 +24,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(routers);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+
+sequelize.sync()
+    .then(() => {
+        console.log('Database berhasil di sync');
+
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    })
+    .catch(error => console.warn(error));

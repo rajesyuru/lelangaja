@@ -23,8 +23,12 @@
                                             <div class="col-md-8">
                                                 <div class="card-body h-100">
                                                     <h3 class="card-title"><%= solded.name %></h3>
-                                                    <h6>Pemenang:</h6>
-                                                    <h5 class="font-weight-bold"><%= solded.winner.name %></h5>
+                                                    <% if (solded.winner === null) { %>
+                                                        <h6>Tidak ada pemenang</h6>
+                                                    <% } else { %>
+                                                        <h6>Pemenang:</h6>
+                                                        <h5 class="font-weight-bold"><%= solded.winner.name %></h5>
+                                                    <% } %>    
                                                     <h6>Harga terakhir:</h6>
                                                     <h5 class="font-weight-bold">Rp. <%= solded.latest_bid.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") %></h5>
                                                 </div>

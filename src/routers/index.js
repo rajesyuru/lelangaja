@@ -12,7 +12,7 @@ router.use((req, res, next) => {
     if (req.headers.cookie && req.headers.cookie.trim().length > 0) {
         const id = req.headers.cookie.split('=')[1];
 
-        req.authUser = {id: id};
+        req.authUser = {id: id*1};
     }
 
     next();

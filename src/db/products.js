@@ -1,111 +1,73 @@
-const uuid = require('uuid/v4');
-const { Client } = require('pg');
 const moment = require('moment-timezone');
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:jakarta123@localhost:5432/lelangaja'
-;
-
-const client = new Client({
-    connectionString: connectionString,
-});
-
-client.connect();
+const { Product, AuctionHistory, sequelize, Op, User } = require('../models');
 
 exports.addProduct = async (user, product) => {
-    product.id = uuid();
-
-    const sql = `insert into products (id, user_id, name, image, description, multiplier, end_date, status, winner_id) values ($1, $2, $3, $4, $5, $6, $7, 'belum selesai', '')`;
-
-    const values = [
-        product.id,
-        user.id,
-        product.name,
-        product.image,
-        product.description,
-        product.multiplier,
-        product.end_date
-    ];
-
-    await client.query(sql, values);
+    await Product.create({
+        user_id: user.id,
+        name: product.name,
+        image: product.image,
+        description: product.description,
+        multiplier: product.multiplier,
+        end_date: product.end_date,
+    });
 };
 
 exports.activeProducts = async () => {
-    const sql = `
-select
-    p.*,
-    u.id as user_id,
-    u.name as user_name,
-    u.email as user_email
-from 
-	products p,
-	users u
-where
-    p.user_id = u.id
-order by
-    p.end_date desc
-    `;
+    const products = await Product.findAll({
+        include: ['user'],
+        order: [
+            ['end_date', 'desc']
+        ]
+    });
 
-    let results = await client.query(sql);
     let out = [];
 
-    for (let i = 0; i < results.rows.length; i++) {
-        const row = results.rows[i];
+    for (let i = 0; i < products.length; i++) {
+        const product = products[i];
 
-        const latest_bid = await exports.getLatestBid(row.id);
+        const latest_bid = await exports.getLatestBid(product.id);
 
         out.push({
-            id: row.id,
-            name: row.name,
-            multiplier: row.multiplier,
-            image: row.image,
-            description: row.description,
-            end_date: moment.tz(row.end_date, 'Asia/Jakarta'),
-            status: row.status,
+            id: product.id,
+            name: product.name,
+            multiplier: product.multiplier,
+            image: product.image,
+            description: product.description,
+            end_date: moment.tz(product.end_date, 'Asia/Jakarta'),
+            status: product.status,
             user: {
-                id: row.user_id,
-                name: row.user_name,
-                email: row.user_email,
+                id: product.user.id,
+                name: product.user.name,
+                email: product.user.email,
             },
             latest_bid: latest_bid,
         });
-    }
+    };
+
+    // console.log(out)
 
     return out;
 };
 
 exports.get = async (id) => {
-    const sql = `
-    select
-        p.*,
-        u.name as owner_name,
-        u.id as owner_id
-    from
-        products p,
-        users u
-    where
-        u.id = p.user_id and
-        p.id = $1
-    `;
+    const product = await Product.findByPk(id, {
+        include: ['user']
+    });
 
-    const values = [id];
-
-    let results = await client.query(sql, values);
-
-    if (results.rows.length > 0) {
-        let row = results.rows[0];
-
+    if (product) {
         return {
-            id: row.id,
-            name: row.name,
-            description: row.description,
-            image: row.image,
-            multiplier: row.multiplier,
-            end_date: moment.tz(row.end_date, 'Asia/Jakarta'),
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            image: product.image,
+            multiplier: product.multiplier,
+            end_date: moment.tz(product.end_date, 'Asia/Jakarta'),
             owner: {
-                id: row.owner_id,
-                name: row.owner_name,
+                id: product.user.id,
+                name: product.user.name,
             },
-            status: row.status
+            status: product.status
         };
     } else {
         return false;
@@ -113,23 +75,17 @@ exports.get = async (id) => {
 }
 
 exports.getLatestBid = async (id) => {
-    const sql = `
-select 
-	price
-from 
-	auction_histories ah 
-where
-	product_id = $1
-order by
-	created_at desc 
-    `;
+    const bid = await AuctionHistory.findOne({
+        where: {
+            product_id: id,
+        },
+        order: [
+            ['createdAt', 'desc']
+        ],
+    });
 
-    const values = [id];
-
-    let results = await client.query(sql, values);
-
-    if (results.rows.length > 0) {
-        return results.rows[0].price;
+    if (bid) {
+        return bid.price;
     } else {
         return 0;
     }
@@ -138,33 +94,22 @@ order by
 
 
 exports.bidWinner = async (id) => {
-    const sql = `
-    select
-        h.*,
-        u.id,
-        u.name as user_name
-    from
-        auction_histories h,
-        users u
-    where
-        h.product_id = $1 and
-        h.user_id = u.id
-    order by
-	    created_at desc
-    `;
+    const history = await AuctionHistory.findOne({
+        where: {
+            product_id: id,
+        },
+        include: ['user', 'product'],
+        order: [
+            ['createdAt', 'desc'],
+        ],
+    });
 
-    const values = [id];
-
-    let results = await client.query(sql, values);
-
-    if (results.rows.length > 0) {
-        let row = results.rows[0];
-
+    if (history) {
         return {
-            winner_id: row.user_id,
-            winner_name: row.user_name,
-            product_id: row.product_id,
-            price: row.price
+            winner_id: history.user.id,
+            winner_name: history.user.name,
+            product_id: history.product.id,
+            price: history.price
         };
 
     } else {
@@ -173,52 +118,73 @@ exports.bidWinner = async (id) => {
 };
 
 exports.endBid = async (id, winner_id) => {
-    const sql = `
-    update
-        products
-    set
-        end_date = now(),
-        status = $1,
-        winner_id = $2
-    where
-        id = $3
-    `;
+    const product = await Product.findByPk(id);
 
-    let values = ['selesai', winner_id, id];
+    if (product) {
+        product.status = 'selesai';
+        product.winner_id = winner_id;
+        product.end_date = Date.now();
 
-    await client.query(sql, values);
+        product.save();
+    }
+ 
+    // const sql = `
+    // update
+    //     products
+    // set
+    //     end_date = now(),
+    //     status = $1,
+    //     winner_id = $2
+    // where
+    //     id = $3
+    // `;
+
+    // let values = ['selesai', winner_id, id];
+
+    // await client.query(sql, values);
 }
 
 exports.wonBid = async (user_id) => {
-    const sql = `
-    select
-        *
-    from
-        products
-    where
-        status = 'selesai' and
-        winner_id = $1
-    order by
-	    end_date desc
-    `;
+    const products = await Product.findAll({
+        where: {
+            status: 'selesai',
+            winner_id: user_id
+        },
+        order: [
+            ['end_date', 'desc']
+        ],
+        include: ['user']
+    });
 
-    const values = [user_id];
+    // const sql = `
+    // select
+    //     *
+    // from
+    //     products
+    // where
+    //     status = 'selesai' and
+    //     winner_id = $1
+    // order by
+	//     end_date desc
+    // `;
 
-    let results = await client.query(sql, values);
+    // const values = [user_id];
+
+    // let results = await client.query(sql, values);
     let out = [];
 
-    for (let i = 0; i < results.rows.length; i++) {
-        const row = results.rows[i];
+    for (let i = 0; i < products.length; i++) {
+        const product = products[i];
 
-        const latest_bid = await exports.getLatestBid(row.id);
+        const latest_bid = await exports.getLatestBid(product.id);
 
         out.push({
-            id: row.id,
-            name: row.name,
-            image: row.image,
+            id: product.id,
+            name: product.name,
+            image: product.image,
             winner: {
-                id: row.user_id,
-                name: row.user_name,
+                id: product.user.id,
+                name: product.user.name,
             },
             latest_bid: latest_bid,
         });
@@ -228,71 +194,88 @@ exports.wonBid = async (user_id) => {
 };
 
 exports.sold = async (id) => {
-    const sql = `
-    select
-        p.*,
-        u.id as winner_id,
-        u.name as winner_name
-    from 
-        products p,
-        users u
-    where
-        status = 'selesai' and
-        p.winner_id = u.id and
-        user_id = $1
-    order by
-	    p.end_date desc
-    `;
+    const solds = await Product.findAll({
+        where: {
+            status: 'selesai',
+            user_id: id,
+        },
+        include: [
+            {
+                model: User,
+                as: 'user',
+                required: true,
+            },
+            {
+                model: User,
+                as: 'winner',
+                required: false,
+            }
+        ]
+    });
+    // const sql = `
+    // select
+    //     p.*,
+    //     u.id as winner_id,
+    //     u.name as winner_name
+    // from 
+    //     products p,
+    //     users u
+    // where
+    //     status = 'selesai' and
+    //     p.winner_id = u.id and
+    //     user_id = $1
+    // order by
+	//     p.end_date desc
+    // `;
 
-    const values = [id];
+    // const values = [id];
 
-    let results = await client.query(sql, values);
+    // let results = await client.query(sql, values);
     let out = [];
 
-    for (let i = 0; i < results.rows.length; i++) {
-        const row = results.rows[i];
+    for (let i = 0; i < solds.length; i++) {
+        const sold = solds[i];
 
-        const latest_bid = await exports.getLatestBid(row.id);
+        const latest_bid = await exports.getLatestBid(sold.id);
 
         out.push({
-            id: row.id,
-            name: row.name,
-            image: row.image,
-            winner: {
-                id: row.winner_id,
-                name: row.winner_name,
+            id: sold.id,
+            name: sold.name,
+            image: sold.image,
+            winner: sold.winner && {
+                id: sold.winner.id,
+                name: sold.winner.name
             },
             latest_bid: latest_bid,
         });
     }
+
+    console.log(out)
 
     return out;
 }
 
 exports.batchAuctionEnd = async () => {
     // cari semua produk yang end_date nya di masa lalu dan status != null
-    const sql = `
-select
-    *
-from 
-	products
-where
-    end_date < now() and 
-    status is distinct from 'selesai'
-    `;
+    const products = await Product.findAll({
+        where: {
+            end_date: {
+                [Op.lt]: Date.now(),
+            },
+            status: sequelize.literal(`status is distinct from 'selesai'`),
+        }
+    });
 
-    let results = await client.query(sql);
-
-    for (let i = 0; i < results.rows.length; i++) {
-        let product = results.rows[i];
+    for (let i = 0; i < products.length; i++) {
+        let product = products[i];
 
         // cari pemenang
-        const winner = await exports.bidWinner(product.id);
+        const winner = await exports.getWinner(product.id);
 
         if (winner) {
-            await exports.endBid(product.id, winner.id);
+            await exports.end(product.id, winner.id);
         } else {
-            await exports.endBid(product.id, '');
+            await exports.end(product.id, null);
         }
     }
 };

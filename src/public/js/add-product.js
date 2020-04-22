@@ -8,6 +8,10 @@ $('[name="multiplier"]').maskMoney({
     bringCaretAtEndOnFocus: false,
 });
 
+$('#description:input').keyup(function(){
+    $('#max-string-count').text(255 - (document.getElementById('description').value.length))
+});
+
 document.getElementById('add-product-form').addEventListener('submit', function(e) {
     e.preventDefault();
 

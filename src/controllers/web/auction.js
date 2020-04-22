@@ -52,11 +52,18 @@ exports.followedAuction = async (req, res) => {
 
 exports.sold = async (req, res) => {
     if (req.authUser) {
-       const id = req.authUser.id;
+        const id = req.authUser.id;
 
         let sold = await dbProduct.sold(id);
 
+        // sold.forEach(solded => {
+        //     console.log(`
+        //     This item is won by ${solded.winner.name}
+        //     `)
+        // })
+
         res.render('sold', {
+            seller_id: id,
             sold: sold
         })
         

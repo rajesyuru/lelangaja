@@ -53,6 +53,7 @@ exports.endBid = async (req, res) => {
             })
         } else {
             let bidWinner = await dbProduct.bidWinner(product_id);
+            // console.log(bidWinner);
             if (bidWinner !== null) {
                 await dbProduct.endBid(product_id, bidWinner.winner_id);
                 res.send({

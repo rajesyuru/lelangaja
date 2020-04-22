@@ -23,7 +23,7 @@ router.post('/reset-email', userController.emailReset);
 router.post('/reset-password', userController.passReset);
 
 router.get('/add-product', auctionController.addProduct);
-router.get('/won-auctions', auctionController.followedAuction);
+router.get('/followed-auctions', auctionController.followedAuction);
 router.get('/auction-room', auctionController.auctionRoom);
 router.get('/sold', auctionController.sold);
 

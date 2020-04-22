@@ -1,78 +1,71 @@
-const uuid = require('uuid/v4');
-const { Client } = require('pg');
 const moment = require('moment-timezone');
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:jakarta123@localhost:5432/lelangaja'
-;
-const client = new Client({
-    connectionString: connectionString,
-});
-
-client.connect();
+const { AuctionHistory } = require('../models');
 
 exports.getAuctions = async (product_id) => {
-    const sql = `
-select
-    ah.*,
-    u.id as user_id,
-    u.name as user_name,
-    u.email as user_email,
-    p.id as product_id,
-    p.name as product_name,
-    p.description as product_description,
-    p.image as product_image,
-    p.multiplier as product_multiplier,
-    p.end_date as product_end_date
-from
-    auction_histories ah,
-    users u,
-    products p
-where
-    ah.user_id = u.id and
-    ah.product_id = p.id and
-    ah.product_id = $1
-order by
-    created_at desc
-    `;
+    const histories = await AuctionHistory.findAll({
+        where: {
+            product_id: product_id,
+        },
+        include: ['user', 'product'],
+        order: [
+            ['createdAt', 'desc']
+        ]
+    });
+//     const sql = `
+// select
+//     ah.*,
+//     u.id as user_id,
+//     u.name as user_name,
+//     u.email as user_email,
+//     p.id as product_id,
+//     p.name as product_name,
+//     p.description as product_description,
+//     p.image as product_image,
+//     p.multiplier as product_multiplier,
+//     p.end_date as product_end_date
+// from
+//     auction_histories ah,
+//     users u,
+//     products p
+// where
+//     ah.user_id = u.id and
+//     ah.product_id = p.id and
+//     ah.product_id = $1
+// order by
+//     created_at desc
+//     `;
 
-    const values = [product_id];
-
-    let results = await client.query(sql, values);
-
-    return results.rows.map(row => {
+    let con = histories.map(history => {
         return {
-            id: row.id,
-            price: row.price,
-            created_at: moment.tz(row.created_at, 'Asia/Jakarta'),
+            id: history.id,
+            price: history.price,
+            created_at: moment.tz(history.createdAt, 'Asia/Jakarta'),
             user: {
-                id: row.user_id,
-                name: row.user_name,
-                email: row.user_email,
+                id: history.user.id,
+                name: history.user.name,
+                email: history.user.email,
             },
             product: {
-                id: row.product_id,
-                name: row.product_name,
-                description: row.product_description,
-                image: row.product_image,
-                multiplier: row.product_multiplier,
-                end_date: moment.tz(row.product_end_date, 'Asia/Jakarta'),
+                id: history.product.id,
+                name: history.product.name,
+                description: history.product.description,
+                image: history.product.image,
+                multiplier: history.product.multiplier,
+                end_date: moment.tz(history.product.end_date, 'Asia/Jakarta'),
             },
         };
     });
+
+    console.log(con);
+
+    return con;
 };
 
 exports.add = async (user_id, product_id, price) => {
-    const id = uuid();
-
-    const sql = `
-    insert into
-        auction_histories
-        (id, user_id, product_id, price, created_at)
-    values
-        ($1, $2, $3, $4, now())
-    `;
-
-    const values = [id, user_id, product_id, price];
-
-    await client.query(sql, values);
+    await AuctionHistory.create({
+        user_id,
+        product_id,
+        price
+    });
 };
