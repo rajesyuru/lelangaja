@@ -13,6 +13,34 @@ img.card-img-top:hover {
     display: none;
 }
 
+#notification-dropdown-menu {
+    max-height: 400px;
+    width: 400px;
+    overflow:hidden; 
+    overflow-y:scroll;
+}
+
+#notification-dropdown-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+#notification-dropdown-menu::-webkit-scrollbar-thumb {
+    background: #dddddd;
+    border-radius: 2px;
+}
+
+#notification-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: #b8b8b8;
+}
+
+@media screen and (max-width: 360px) {
+    #notification-dropdown-menu {
+        max-height: 400px;
+        width: 100vw;
+        right: -167%;
+    }
+}
+
 @media screen and (max-width: 768px) {
     #card-history-top {
         display: none;
