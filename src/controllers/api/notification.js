@@ -1,7 +1,7 @@
 const { AuctionHistory, Notification, Op } = require('../../models');
-// const dbUser = require('../../db/user');
+const dbUser = require('../../db/user');
 
-exports.notifyOutBid = async (req, res, auction_history_id) => {
+exports.notifyOutBid = async (auction_history_id) => {
     const history = await AuctionHistory.findByPk(auction_history_id);
 
     if (history) {
@@ -30,10 +30,14 @@ exports.notifyOutBid = async (req, res, auction_history_id) => {
         for (let i = 0; i < userIds.length; i++) {
             let userId = userIds[i];
 
+            let user = await dbUser.getUser(userId);
+
+            // console.log(user.name);
+
             await Notification.create({
                 user_id: userId,
                 product_id: history.product_id,
-                message: `Anda baru saja dikalahkan oleh ${userId}, bid sekarang.`,
+                message: `Anda baru saja dikalahkan, bid sekarang.`,
             });
         }
     }
