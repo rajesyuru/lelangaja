@@ -22,6 +22,8 @@ exports.notifyOutBid = async (auction_history_id) => {
         for (let i = 0; i < histories.length; i++) {
             let userId = histories[i].user_id;
 
+            console.log(await dbUser.getUser(userId));
+
             if ( userId !== history.user_id && userIds.findIndex(id => id === userId) < 0 ) {
                 userIds.push(userId);
             }
