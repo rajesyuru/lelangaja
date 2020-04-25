@@ -30,10 +30,6 @@ exports.notifyOutBid = async (auction_history_id) => {
         for (let i = 0; i < userIds.length; i++) {
             let userId = userIds[i];
 
-            let user = await dbUser.getUser(userId);
-
-            // console.log(user.name);
-
             await Notification.create({
                 user_id: userId,
                 product_id: history.product_id,
