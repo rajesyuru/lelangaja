@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         user_id: DataTypes.INTEGER,
         product_id: DataTypes.INTEGER,
         message: DataTypes.STRING,
-        read: DataTypes.BOOLEAN,
+        read: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        }
     });
 
     return Notification;

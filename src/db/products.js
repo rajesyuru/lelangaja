@@ -17,7 +17,7 @@ exports.activeProducts = async () => {
     const products = await Product.findAll({
         include: ['user'],
         order: [
-            ['end_date', 'desc']
+            ['createdAt', 'desc']
         ]
     });
 
@@ -123,7 +123,10 @@ exports.endBid = async (id, winner_id) => {
     if (product) {
         product.status = 'selesai';
         product.winner_id = winner_id;
-        product.end_date = Date.now();
+
+        product.save();
+
+        product.end_date = product.updatedAt;
 
         product.save();
     }
@@ -250,7 +253,7 @@ exports.sold = async (id) => {
         });
     }
 
-    console.log(out)
+    // console.log(out)
 
     return out;
 }
@@ -270,12 +273,12 @@ exports.batchAuctionEnd = async () => {
         let product = products[i];
 
         // cari pemenang
-        const winner = await exports.getWinner(product.id);
+        const winner = await exports.bidWinner(product.id);
 
         if (winner) {
-            await exports.end(product.id, winner.id);
+            await exports.endBid(product.id, winner.id);
         } else {
-            await exports.end(product.id, null);
+            await exports.endBid(product.id, null);
         }
     }
 };

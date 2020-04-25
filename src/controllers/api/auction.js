@@ -1,6 +1,6 @@
-const dbUser = require('../../db/user');
 const dbProduct = require('../../db/products');
 const dbAuctionHistories = require('../../db/auction-histories');
+const notificationController = require('./notification');
 
 exports.bid = async (req, res) => {
     if (req.authUser) {
@@ -22,7 +22,9 @@ exports.bid = async (req, res) => {
                 message: 'ID Produk tidak valid',
             });
         } else {
-            await dbAuctionHistories.add(id, product_id, price);
+            let history = await dbAuctionHistories.add(id, product_id, price);
+
+            notificationController.notifyOutBid(history.id);
 
             res.send({
                 status: 'success',

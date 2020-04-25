@@ -57,15 +57,17 @@ exports.getAuctions = async (product_id) => {
         };
     });
 
-    console.log(con);
+    // console.log(con);
 
     return con;
 };
 
 exports.add = async (user_id, product_id, price) => {
-    await AuctionHistory.create({
+    let history = await AuctionHistory.create({
         user_id,
         product_id,
         price
     });
+
+    return history;
 };
