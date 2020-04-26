@@ -1,6 +1,7 @@
 const dbProduct = require('../../db/products');
 const utilities = require('../../utilities');
 const dbNotifications = require('../../db/notifications');
+const { Notification } = require('../../models')
 
 exports.index = async (req, res) => {
     if (req.authUser) {
@@ -24,8 +25,23 @@ exports.notifications = async (req, res) => {
     if (req.authUser) {
         const id = req.authUser.id;
 
+        let notificationsList = await dbNotifications.notificationsAll(id);
+        let notifications = await dbNotifications.notifications(id);
+
+        await Notification.update(
+            {
+                read: true
+            },
+            {
+                where:  {
+                    user_id: id
+                }
+            }
+        );
+        
         res.render('notifications', {
-            notifications: await dbNotifications.notificationsAll(id),
+            notificationsList: notificationsList,
+            notifications: notifications
         });
     } else {
         // redirect ke hal login

@@ -4,55 +4,64 @@
             <a class="navbar-brand" href="/dashboard">Lelang Aja</a>
             <ul class="navbar-nav ml-auto d-flex flex-row">
                 <li class="nav-item dropdown my-auto px-4 px-md-2">
-                    <a class="nav-link p-0 position-relative" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link p-0 position-relative" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="material-icons align-middle">
                             notifications
                         </span>
-                        <% if (notifications !== null) { %> 
-                            <span class="badge badge-pill badge-danger position-absolute" style="bottom: 50%; left: 50%;">
-                                <%= notifications.length %> 
-                            </span>
+                        <% if (notifications !== null) { %>
+                        <span class="badge badge-pill badge-danger position-absolute" style="bottom: 50%; left: 50%;">
+                            <%= notifications.length %>
+                        </span>
                         <% } else { %>
-                            <span></span>
-                        <% } %> 
+                        <span></span>
+                        <% } %>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right position-absolute p-0" id="notification-dropdown-menu" aria-labelledby="navbarDropdown">
-                        <ul class="list-group pt-1" id="notification-dropdown-list" >
+                    <div class="dropdown-menu dropdown-menu-right position-absolute p-0" id="notification-dropdown-menu"
+                        aria-labelledby="navbarDropdown">
+                        <ul class="list-group pt-1" id="notification-dropdown-list">
                             <li class="list-group-item p-0 border-0 dropdown-item position-relative">
-                                <% if (notifications !== null) { %> 
-                                    <% for (notification of notifications) { %> 
-                                        <a href="/auction-room?id=<%= notification.product.id %>" class="text-decoration-none text-dark">
-                                            <div class="card">
-                                                <div class="row no-gutters">
-                                                    <div class="col-2 h-100">
-                                                        <img class="w-100" src="<%= notification.product.image %>" alt="<%= notification.product.name %> ">
-                                                    </div>
-                                                    <div class="col-10">
-                                                        <div class="card-body py-1 px-2 h-100">
-                                                            <p><%= notification.message %> </p>
-                                                        </div>
-                                                    </div>
+                                <% if (notifications !== null) { %>
+                                <% for (notification of notifications) { %>
+                                <a href="/auction-room?id=<%= notification.product.id %>"
+                                    class="text-decoration-none text-dark">
+                                    <div class="card">
+                                        <div class="row no-gutters">
+                                            <div class="col-2 h-100">
+                                                <img class="w-100" src="<%= notification.product.image %>"
+                                                    alt="<%= notification.product.name %> ">
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="card-body py-1 px-2 h-100">
+                                                    <p><%= notification.message %> </p>
                                                 </div>
                                             </div>
-                                        </a>
-                                    <% } %> 
-                                <% } else { %> 
-                                    <p class="text-center">Anda tidak memiliki notifikasi terbaru</p>
-                                <% } %> 
+                                        </div>
+                                    </div>
+                                </a>
+                                <% } %>
+                                <% } else { %>
+                                <p class="text-center">Anda tidak memiliki notifikasi terbaru</p>
+                                <% } %>
                             </li>
                         </ul>
                         <div class="dropdown-divider"></div>
                         <div class="row" style="overflow: hidden;">
                             <div class="col-6 p-0">
-                                <a href="#" class="text-decoration-none text-center text-primary"><p id="notification-menu">Tandai semua sudah dibaca</p></a>
+                                <% if (notifications !== null) { %> 
+                                    <p id="notification-read" class="text-decoration-none text-center text-primary" style="cursor: pointer;">Tandai semua sudah dibaca</p>
+                                <% } else { %>
+                                    <p class="text-center text-muted" style="user-select: none;">Tandai semua sudah dibaca</p>
+                                <% } %> 
                             </div>
                             <div class="col-6 p-0">
-                                <a href="/notifications" class="text-decoration-none text-center text-primary"><p id="notification-menu">Lihat semua notifikasi</p></a>
+                                <a href="/notifications" class="text-decoration-none text-center text-primary">
+                                    <p>Lihat semua notifikasi</p>
+                                </a>
                             </div>
                         </div>
-                        
-                        
+
+
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -75,3 +84,4 @@
         </nav>
     </div>
 </div>
+<script src="../../public/js/read-all-notifications.js"></script>

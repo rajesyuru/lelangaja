@@ -40,3 +40,25 @@ exports.notifyOutBid = async (auction_history_id) => {
         };
     };
 };
+
+exports.readAllNotifications = async (req, res) => {
+    // console.log('error')
+    if (req.authUser) {
+        const id = req.authUser.id;
+        await Notification.update(
+            {
+                read: true
+            },
+            {
+                where:  {
+                    user_id: id
+                }
+            }
+        );
+    } else {
+        res.send({
+            status: 'error'
+        });
+    };
+    
+};

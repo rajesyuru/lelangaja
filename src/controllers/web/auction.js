@@ -81,7 +81,7 @@ exports.sold = async (req, res) => {
 exports.addProduct = async (req, res) => {
     if (req.authUser) {
         res.render('add-product', {
-            notifications: await dbNotifications.notifications(req.authUser.id),
+            notifications: null
         });
     } else {
         res.redirect('/');
