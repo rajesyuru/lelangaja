@@ -37,6 +37,6 @@ exports.notifyOutBid = async (auction_history_id) => {
                 product_id: history.product_id,
                 message: `Anda baru saja dikalahkan, bid sekarang.`,
             });
-        }
-    }
-}
+        };
+    };
+};
