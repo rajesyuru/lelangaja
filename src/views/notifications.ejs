@@ -12,21 +12,25 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <% for (notification of notificationsList) { %>
-                            <a href="/auction-room?id=<%= notification.product.id %>" class="text-decoration-none text-dark">
-                                <div class="card my-5 shadow-sm">
-                                    <div class="row no-gutters">
-                                        <div class="col-md-2 h-100">
-                                            <img class="w-100 card-image-top" src='<%= notification.product.image %>' alt='<%= notification.product.name %>'>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <div class="card-body h-100">
-                                                <p class="card-title align-middle"><%= notification.message %></p>
+                        <% if (notificationsList !== null) { %>
+                            <% for (notification of notificationsList) { %>
+                                <a href="/auction-room?id=<%= notification.product.id %>" class="text-decoration-none text-dark">
+                                    <div class="card my-5 shadow-sm">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-2 h-100">
+                                                <img class="w-100 card-image-top" src='<%= notification.product.image %>' alt='<%= notification.product.name %>'>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div class="card-body h-100">
+                                                    <p class="card-title align-middle"><%= notification.message %></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
+                            <% } %> 
+                        <% } else {%>
+                            <h3 class="text-muted text-center">Anda tidak memiliki notifikasi</h3>
                         <% } %> 
                     </div>
                 </div>

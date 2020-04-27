@@ -221,4 +221,18 @@ exports.notifyAuctionLost = async (product_id, winner_id) => {
             message: `Maaf. Anda kalah di pelelangan ${product.name}. Coba lagi di pelelangan berikutnya.`,
         });
     };
-}
+};
+
+// exports.deleteAllNotifications = async (id) => {
+//     const notifications = await Notification.findAll({
+//         where: {
+//             user_id: id
+//         }
+//     })
+
+//     if (notifications.length > 0) {
+//         for (i = 0; i < notifications.length; i++) {
+
+//         }
+//     }
+// };
