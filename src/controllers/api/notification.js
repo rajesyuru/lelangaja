@@ -33,27 +33,40 @@ exports.notifyOutBid = async (auction_history_id) => {
 
         for (let i = 0; i < userIds.length; i++) {
             let userId = userIds[i];
+            let product = await dbProducts.get(history.product_id);
 
             await Notification.create({
                 user_id: userId,
                 product_id: history.product_id,
-                message: `Anda baru saja dikalahkan, bid sekarang.`,
+                message: `Anda baru saja dikalahkan di pelelangan ${product.name}, bid sekarang!`,
             });
         };
     };
 };
 
-exports.readAllNotifications = async (id) => {
-    await Notification.update(
-        {
-            read: true
-        },
-        {
-            where:  {
-                user_id: id
+exports.readAllNotifications = async (req, res) => {
+    if (req.authUser) {
+        const id = req.authUser.id;
+        await Notification.update(
+            {
+                read: true
+            },
+            {
+                where:  {
+                    user_id: id
+                }
             }
-        }
-    );
+        );
+        res.send({
+            status: 'success'
+        })
+    } else {
+        res.send({
+            status: 'error',
+            message: 'User tidak ditemukan'
+        })
+    }
+    
 };
 
 exports.notificationsAll = async (user_id) => {
@@ -205,7 +218,7 @@ exports.notifyAuctionLost = async (product_id, winner_id) => {
         await Notification.create({
             user_id: userId,
             product_id: product_id,
-            message: `Maaf. Anda kalah di pelelangan ${product.name}. Coba lagi di pelelangan berikutnya`,
+            message: `Maaf. Anda kalah di pelelangan ${product.name}. Coba lagi di pelelangan berikutnya.`,
         });
     };
 }

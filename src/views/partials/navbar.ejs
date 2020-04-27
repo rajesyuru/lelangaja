@@ -22,46 +22,37 @@
                         <ul class="list-group pt-1" id="notification-dropdown-list">
                             <li class="list-group-item p-0 border-0 dropdown-item position-relative">
                                 <% if (notifications !== null) { %>
-                                <% for (notification of notifications) { %>
-                                <a href="/auction-room?id=<%= notification.product.id %>"
-                                    class="text-decoration-none text-dark">
-                                    <div class="card text-wrap">
-                                        <div class="row no-gutters">
-                                            <div class="col-2 h-100">
-                                                <img class="w-100" src="<%= notification.product.image %>"
-                                                    alt="<%= notification.product.name %> ">
-                                            </div>
-                                            <div class="col-10">
-                                                <div class="card-body py-1 px-2 h-100">
-                                                    <p><%= notification.message %> </p>
+                                    <% for (notification of notifications) { %>
+                                        <a href="/auction-room?id=<%= notification.product.id %>"
+                                            class="text-decoration-none text-dark">
+                                            <div class="card text-wrap">
+                                                <div class="row no-gutters">
+                                                    <div class="col-2 h-100">
+                                                        <img class="w-100" src="<%= notification.product.image %>"
+                                                            alt="<%= notification.product.name %> ">
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <div class="card-body py-1 px-2 h-100">
+                                                            <p><%= notification.message %> </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <% } %>
+                                        </a>
+                                    <% } %>
                                 <% } else { %>
-                                <p class="text-center">Anda tidak memiliki notifikasi terbaru</p>
+                                    <p class="text-center">Anda tidak memiliki notifikasi terbaru</p>
                                 <% } %>
                             </li>
                         </ul>
-                        <div class="dropdown-divider"></div>
-                        <div class="row" style="overflow: hidden;">
-                            <div class="col-6 p-0">
-                                <% if (notifications !== null) { %> 
-                                    <p id="notification-read" class="text-decoration-none text-center text-primary" style="cursor: pointer;">Tandai semua sudah dibaca</p>
-                                <% } else { %>
-                                    <p class="text-center text-muted" style="user-select: none;">Tandai semua sudah dibaca</p>
-                                <% } %> 
-                            </div>
-                            <div class="col-6 p-0">
-                                <a href="/notifications" class="text-decoration-none text-center text-primary">
-                                    <p>Lihat semua notifikasi</p>
-                                </a>
-                            </div>
+                        <div class="btn-group w-100" role="group">
+                            <% if (notifications !== null) { %> 
+                                <button type="button" class="btn btn-light py-3" id="read-all">Tandai semua sudah dibaca</button>
+                            <% } else { %>
+                                <button type="button" class="btn btn-light" disabled style="cursor: default;">Tandai semua sudah dibaca</button>
+                            <% } %> 
+                            <a href="/notifications" class="btn btn-light py-3">Lihat semua notifikasi</a>
                         </div>
-
-
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -84,4 +75,4 @@
         </nav>
     </div>
 </div>
-<script src="../../public/js/read-all-notifications.js"></script>
+<script src="../../public/js/dashboard.js"></script>

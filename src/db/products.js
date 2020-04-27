@@ -14,7 +14,14 @@ exports.addProduct = async (user, product) => {
 };
 
 exports.activeProducts = async () => {
+    let recent = new Date();
+    recent.setDate(recent.getDate() - 30);
     const products = await Product.findAll({
+        where: {
+            end_date: {
+                [Op.gt]: recent
+            }
+        },
         include: ['user'],
         order: [
             ['createdAt', 'desc']
