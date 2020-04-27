@@ -69,6 +69,20 @@ exports.readAllNotifications = async (req, res) => {
     
 };
 
+exports.readNotification = async (product_id, user_id) => {
+    await Notification.update(
+        {
+            read: true
+        },
+        {
+            where: {
+                product_id,
+                user_id
+            }
+        }
+    );
+};
+
 exports.notificationsAll = async (user_id) => {
     const notifications = await Notification.findAll({
         where: {
@@ -103,6 +117,7 @@ exports.notificationsAll = async (user_id) => {
                         name: product.name,
                         image: product.image
                     },
+                    read: notification.read,
                     message: notification.message
                 });
             } else {
@@ -223,16 +238,21 @@ exports.notifyAuctionLost = async (product_id, winner_id) => {
     };
 };
 
-// exports.deleteAllNotifications = async (id) => {
-//     const notifications = await Notification.findAll({
-//         where: {
-//             user_id: id
-//         }
-//     })
-
-//     if (notifications.length > 0) {
-//         for (i = 0; i < notifications.length; i++) {
-
-//         }
-//     }
-// };
+exports.deleteAllNotifications = async (req, res) => {
+    if (req.authUser) {
+        const id = req.authUser.id;
+        await Notification.destroy({
+            where: {
+                user_id: id
+            }
+        })
+        res.send({
+            status: 'success'
+        });
+    } else {
+        res.send({
+            status: 'error',
+            message: 'User tidak ditemukan'
+        })
+    }
+};

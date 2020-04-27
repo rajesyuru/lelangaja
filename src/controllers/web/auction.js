@@ -17,6 +17,8 @@ exports.auctionRoom = async (req, res) => {
 
             const bidWinner = await dbProduct.bidWinner(product_id);
 
+            await notificationController.readNotification(product_id, id);
+
             res.render('auction-room', {
                 me_id: id,
                 histories: histories,

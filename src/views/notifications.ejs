@@ -7,31 +7,77 @@
 
 <body>
     <div class="container-fluid">
-        <%- include('partials/navbar') %> 
+        <%- include('partials/navbar') %>
         <div class="row">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <% if (notificationsList !== null) { %>
+                        <ul class="list-group mt-5" style="max-height: 500px; overflow:hidden; overflow-y:scroll;">
                             <% for (notification of notificationsList) { %>
-                                <a href="/auction-room?id=<%= notification.product.id %>" class="text-decoration-none text-dark">
-                                    <div class="card my-5 shadow-sm">
-                                        <div class="row no-gutters">
-                                            <div class="col-md-2 h-100">
-                                                <img class="w-100 card-image-top" src='<%= notification.product.image %>' alt='<%= notification.product.name %>'>
-                                            </div>
-                                            <div class="col-md-10">
-                                                <div class="card-body h-100">
-                                                    <p class="card-title align-middle"><%= notification.message %></p>
+                            <li class="list-group-item">
+                                <a href="/auction-room?id=<%= notification.product.id %>"
+                                    class="text-decoration-none text-dark">
+                                    <% if (notification.read !== true) { %> 
+                                        <div class="card">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-2 h-100">
+                                                    <img class="w-100 card-image-top"
+                                                        src='<%= notification.product.image %>'
+                                                        alt='<%= notification.product.name %>'>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <div class="card-body h-100">
+                                                        <p class="card-title align-middle"><%= notification.message %></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <% } else { %>
+                                        <div class="card bg-light position-relative">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-2 h-100">
+                                                    <img class="w-100 card-image-top"
+                                                        src='<%= notification.product.image %>'
+                                                        alt='<%= notification.product.name %>'>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <div class="card-body h-100">
+                                                        <p class="card-title text-secondary align-middle"><%= notification.message %></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %> 
                                 </a>
-                            <% } %> 
+                            </li>
+                            <% } %>
+                        </ul>
+                        <div class="btn-group w-100">
+                            <button type="button" class="btn btn-primary" id="read-all-button">Tandai semua sudah dibaca</button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                data-target="#confirmDelete">Hapus semua notifikasi</button>
+                        </div>
+
+                        <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        Apakah Anda yakin mau menghapus semua notifikasi?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Tidak</button>
+                                        <button type="button" id="delete-all-notifications" class="btn btn-primary">Ya</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <% } else {%>
-                            <h3 class="text-muted text-center">Anda tidak memiliki notifikasi</h3>
-                        <% } %> 
+                        <h3 class="text-muted text-center mt-5">Anda tidak memiliki notifikasi</h3>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -41,6 +87,7 @@
     <%- include('partials/footer') %>
     <script src="js/checklogin.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/notification.js"></script>
 </body>
 
 </html>

@@ -29,17 +29,8 @@ exports.notifications = async (req, res) => {
     if (req.authUser) {
         const id = req.authUser.id;
 
-        await Notification.update(
-            {
-                read: true
-            },
-            {
-                where:  {
-                    user_id: id
-                }
-            }
-        );
-        
+        // console.log(await notificationController.notificationsAll(id));
+
         res.render('notifications', {
             notificationsList: await notificationController.notificationsAll(id),
             notifications: await notificationController.notifications(id)

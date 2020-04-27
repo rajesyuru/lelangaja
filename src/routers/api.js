@@ -14,7 +14,8 @@ router.post('/add-product', auctionController.addProduct);
 router.get('/users', userController.fetch);
 router.post('/edit-profile', userController.editProfile);
 
-router.post('/read-all-notifications', notificationController.readAllNotifications)
+router.post('/read-all-notifications', notificationController.readAllNotifications);
+router.post('/delete-all-notifications', notificationController.deleteAllNotifications);
 
 router.get('/check-login', authController.checkLogin);
 

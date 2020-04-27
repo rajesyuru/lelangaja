@@ -12,6 +12,7 @@ const dbName = 'lelangaja';
 const dbUserName = 'postgres';
 const dbPassword = 'jakarta123';
 const logging = false;
+const timezone = '+07:00'
 
 let sequelize;
 
@@ -20,12 +21,14 @@ if (databaseURL) {
         dialect: dbClient,
         host: dbHost,
         logging: logging,
+        timezone: timezone
     });
 } else {
     sequelize = new Sequelize(dbName, dbUserName, dbPassword, {
         dialect: dbClient,
         host: dbHost,
         logging: logging,
+        timezone: timezone
     });
 }
 
