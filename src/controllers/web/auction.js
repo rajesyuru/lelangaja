@@ -1,7 +1,7 @@
 const dbProduct = require('../../db/products');
 const dbAuctionHistories = require('../../db/auction-histories');
 const utilities = require('../../utilities');
-const dbNotifications = require('../../db/notifications');
+const notificationController = require('../api/notification');
 
 exports.auctionRoom = async (req, res) => {
     if (req.authUser) {
@@ -17,8 +17,6 @@ exports.auctionRoom = async (req, res) => {
 
             const bidWinner = await dbProduct.bidWinner(product_id);
 
-            // console.log(product.status);
-
             res.render('auction-room', {
                 me_id: id,
                 histories: histories,
@@ -26,7 +24,7 @@ exports.auctionRoom = async (req, res) => {
                 bidPrice: bidPrice,
                 bidWinner: bidWinner,
                 formatPrice: utilities.formatPrice,
-                notifications: await dbNotifications.notifications(id),
+                notifications: await notificationController.notifications(id),
             });
         } else {
             res.send('Not found');
@@ -44,7 +42,7 @@ exports.followedAuction = async (req, res) => {
 
         res.render('followed-auctions', {
             wonBids: wonBids,
-            notifications: await dbNotifications.notifications(id),
+            notifications: await notificationController.notifications(id),
         })
     } else {
         res.send({
@@ -68,7 +66,7 @@ exports.sold = async (req, res) => {
         res.render('sold', {
             seller_id: id,
             sold: sold,
-            notifications: await dbNotifications.notifications(id),
+            notifications: await notificationController.notifications(id),
         })
         
     } else {

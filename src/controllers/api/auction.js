@@ -58,6 +58,8 @@ exports.endBid = async (req, res) => {
             // console.log(bidWinner);
             if (bidWinner !== null) {
                 await dbProduct.endBid(product_id, bidWinner.winner_id);
+                await notificationController.notifyAuctionWon(product_id, bidWinner.winner_id);
+                await notificationController.notifyAuctionLost(product_id, bidWinner.winner_id);
                 res.send({
                     status: 'success',
                 })

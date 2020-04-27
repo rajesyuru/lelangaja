@@ -1,5 +1,5 @@
 const dbUser = require('../../db/user');
-const dbNotifications = require('../../db/notifications');
+const notificationController = require('../api/notification');
 
 exports.list = (req, res) => {
     if (req.authUser) {
@@ -12,7 +12,7 @@ exports.list = (req, res) => {
 exports.editProfile = async (req, res) => {
     if (req.authUser) {
         res.render('edit-profile', {
-            notifications: await dbNotifications.notifications(req.authUser.id)
+            notifications: await notificationController.notifications(req.authUser.id)
         });
     } else {
         res.redirect('/');

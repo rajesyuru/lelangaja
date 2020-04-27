@@ -1,7 +1,7 @@
 const dbProduct = require('../../db/products');
 const utilities = require('../../utilities');
-const dbNotifications = require('../../db/notifications');
-const { Notification } = require('../../models')
+const { Notification } = require('../../models');
+const notificationController = require('../api/notification');
 
 exports.index = async (req, res) => {
     if (req.authUser) {
@@ -9,10 +9,14 @@ exports.index = async (req, res) => {
 
         let products = await dbProduct.activeProducts();
 
+        let notifications = await notificationController.notifications(id);
+
+        // console.log(notifications);
+
         res.render('dashboard', {
             products: products,
             logged_in_id: id,
-            notifications: await dbNotifications.notifications(id),
+            notifications: notifications,
             formatPrice: utilities.formatPrice,
         });
     } else {
@@ -24,9 +28,6 @@ exports.index = async (req, res) => {
 exports.notifications = async (req, res) => {
     if (req.authUser) {
         const id = req.authUser.id;
-
-        let notificationsList = await dbNotifications.notificationsAll(id);
-        let notifications = await dbNotifications.notifications(id);
 
         await Notification.update(
             {
@@ -40,8 +41,8 @@ exports.notifications = async (req, res) => {
         );
         
         res.render('notifications', {
-            notificationsList: notificationsList,
-            notifications: notifications
+            notificationsList: await notificationController.notificationsAll(id),
+            notifications: await notificationController.notifications(id)
         });
     } else {
         // redirect ke hal login
