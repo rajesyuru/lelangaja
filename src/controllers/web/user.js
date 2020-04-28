@@ -103,3 +103,13 @@ exports.passReset = async (req, res) => {
     });
     
 };
+
+exports.messages = async (req, res) => {
+    if (req.authUser) {
+        res.render('messages', {
+            notifications: await notificationController.notifications(req.authUser.id)
+        })
+    } else {
+        res.redirect('/')
+    };
+};

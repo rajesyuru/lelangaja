@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <%- include('partials/navbar') %>
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="list-group mt-5" style="max-height: 500px; overflow:hidden; overflow-y:scroll;">
+                            <li class="list-group-item">
+                                <a href="" class="text-decoration-none text-dark">
+                                    <div class="card">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-2">
+                                                <img src="..." class="card-img" alt="product image">
+                                            </div>
+                                            <div class="col-md-10">
+                                                <div class="card-body">
+                                                    <h5 class="card-title font-weight-bold mb-0">Nama barang</h5>
+                                                    <p class="card-text">Nama pemilik barang</p>
+                                                    <p class="card-text">Pesan paling akhir</p>
+                                                    <p class="card-text"><small class="text-muted">Kapan terakhir kali pesan terkirim</small></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <script src="js/checklogin.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/notification.js"></script>
+</body>
+
+</html>

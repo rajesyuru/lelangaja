@@ -4,6 +4,7 @@ const userModel = require('./user');
 const productModel = require('./product');
 const auctionHistoryModel = require('./auctionHistory');
 const notificationModel = require('./notification');
+const messageModel = require('./message')
 
 const databaseURL = process.env.DATABASE_URL || null;
 const dbClient = 'postgresql';
@@ -40,6 +41,7 @@ model.User = userModel(sequelize, DataTypes);
 model.Product = productModel(sequelize, DataTypes);
 model.AuctionHistory = auctionHistoryModel(sequelize, DataTypes);
 model.Notification = notificationModel(sequelize, DataTypes);
+model.Messsage = messageModel(sequelize, DataTypes);
 
 // relations
 model.User.hasMany(model.Product, {
@@ -75,6 +77,11 @@ model.Notification.belongsTo(model.User, {
 model.Notification.belongsTo(model.Product, {
     as: 'product',
     foreignKey: 'product_id',
+});
+
+model.Messsage.belongsTo(model.User, {
+    as: 'user',
+    foreignKey: 'user_id'
 });
 
 

@@ -21,6 +21,7 @@ router.get('/reset-email', userController.getEmailReset);
 router.get('/reset-password', userController.getPassReset);
 router.post('/reset-email', userController.emailReset);
 router.post('/reset-password', userController.passReset);
+router.get('/messages', userController.messages);
 
 router.get('/notifications', dashboardController.notifications);
 
